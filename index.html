@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shimul Kanjilal — Frontend Developer & UI Designer</title>
+<meta name="description" content="Portfolio of Shimul Kanjilal, a frontend developer and UI designer crafting fast, minimal, and thoughtful interfaces.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loader" id="loader">
+  <div class="loader-mark">
+    <span>S</span><span>K</span>
+  </div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- Cursor Glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Navbar -->
+<header class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="#hero" class="logo">SK<span>.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#experience" class="nav-link">Journey</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+      <a href="#articles" class="nav-link">Articles</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary btn-sm nav-cta">Let's Talk</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="heroBg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-text reveal-up">
+        <p class="eyebrow">Frontend Developer &middot; UI Designer</p>
+        <h1 class="hero-title">
+          Hi, I'm <span class="text-gradient">Shimul Kanjilal</span><br>
+          <span class="typing-wrap">I build <span id="typingText"></span><span class="cursor-blink">|</span></span>
+        </h1>
+        <p class="hero-desc">
+          I design and build clean, fast, and accessible interfaces — turning
+          ideas into products people enjoy using, one pixel and one commit at a time.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary ripple">View Projects</a>
+          <a href="#contact" class="btn btn-outline ripple">Contact Me</a>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><strong>2+</strong><span>Years learning</span></div>
+          <div class="hero-meta-item"><strong>1+</strong><span>Projects built</span></div>
+          <div class="hero-meta-item"><strong>5+</strong><span>Happy clients</span></div>
+        </div>
+      </div>
+      <div class="hero-visual reveal-right">
+        <div class="hero-photo-frame">
+          <div class="hero-photo">
+            <img src="image/shimul.jpg" alt="Portrait of Shimul Kanjilal" loading="eager">
+          </div>
+          <div class="orbit-dot orbit-1"></div>
+          <div class="orbit-dot orbit-2"></div>
+          <div class="orbit-dot orbit-3"></div>
+          <div class="floating-chip chip-1">⚡ Available for work</div>
+          <div class="floating-chip chip-2">📍 Dhaka, BD</div>
+        </div>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">About</p>
+      <h2 class="section-title reveal-up">A little about how I work &amp; why</h2>
+      <div class="about-grid">
+        <div class="glass-card about-bio reveal-up">
+          <h3>Bio</h3>
+          <p>I'm a frontend developer based in Dhaka, Bangladesh, focused on building
+          interfaces that feel effortless. I care about the small details — the
+          easing curve on a hover, the spacing between two lines of text — because
+          those details are what make a product feel finished.</p>
+        </div>
+        <div class="glass-card about-edu reveal-up">
+          <h3>Education</h3>
+          <ul class="about-list">
+            <li><strong>B.Sc. in Computer Science</strong><span>Northern University Bangladesh, 2024</span></li>
+            <li><strong>Frontend Web Development</strong><span>Self-taught + online mentorship, 2023</span></li>
+          </ul>
+        </div>
+        <div class="glass-card about-interests reveal-up">
+          <h3>Interests</h3>
+          <div class="tag-cloud">
+            <span class="tag">UI Design</span>
+            <span class="tag">Photography</span>
+            <span class="tag">Chess</span>
+          </div>
+        </div>
+        <div class="glass-card about-goals reveal-up">
+          <h3>Goals</h3>
+          <p>Over the next year, I'm aiming to deepen my craft in design systems
+          and motion, contribute to open-source UI libraries, and work with teams
+          who care as much about polish as I do.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section section-alt" id="skills">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Skills</p>
+      <h2 class="section-title reveal-up">Tools I reach for</h2>
+      <div class="skills-grid">
+        <div class="skill-item reveal-up" data-level="85">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">HTML</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="65">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">CSS</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="32">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">JavaScript</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="55">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">Firebase</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="38">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">Git &amp; GitHub</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="24">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">Figma</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Services</p>
+      <h2 class="section-title reveal-up">What I can help you with</h2>
+      <div class="services-grid">
+        <div class="service-card glass-card reveal-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 14.5v-9Z" stroke="currentColor" stroke-width="1.5"/><path d="M3 8h18M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Web Design</h3>
+          <p>Clean, purposeful layouts that guide attention and make content easy to scan and act on.</p>
+        </div>
+        <div class="service-card glass-card reveal-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Frontend Development</h3>
+          <p>Fast, accessible, pixel-accurate builds using semantic HTML, modern CSS, and vanilla JS.</p>
+        </div>
+        <div class="service-card glass-card reveal-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m14.24 5.24-2.12-2.12M8.88 8.88 6.76 6.76m10.48 0-2.12 2.12M8.88 15.12l-2.12 2.12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <h3>UI Design</h3>
+          <p>Design systems and interface components that stay consistent as a product grows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section section-alt" id="projects">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Projects</p>
+      <h2 class="section-title reveal-up">Selected work</h2>
+
+      <div class="project-filters reveal-up" id="projectFilters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="app">Web Apps</button>
+        <button class="filter-btn" data-filter="web">Landing Pages</button>
+        <button class="filter-btn" data-filter="kit">UI Kits</button>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+
+        <article class="project-card project-card-featured reveal-up" data-category="app">
+          <div class="project-img">
+            <img src="image/GopalBigrahmandir.png" alt="Preview of Gopal Bigrah Mandir" loading="lazy">
+            <div class="project-overlay">
+              <a href="https://gopalbigrahmandir.netlify.app/" class="icon-btn" aria-label="View live demo">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a href="https://github.com/shimulkanjilal" class="icon-btn" aria-label="View source on GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-index">01</span>
+            <h3>Gopal Bigrah Mandir</h3>
+            <p>A beautiful and interactive website for the Gopal Bigrah Mandir temple, showcasing its spiritual heritage and community events.</p>
+            <div class="tag-row"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+            <div class="project-links">
+              <a href="https://gopalbigrahmandir.netlify.app/" class="link-btn">Live Demo</a>
+              <a href="https://github.com/shimulkanjilal" class="link-btn link-btn-ghost">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE TIMELINE -->
+  <section class="section" id="experience">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Journey</p>
+      <h2 class="section-title reveal-up">How I got here</h2>
+      <div class="timeline">
+        <div class="timeline-line"><div class="timeline-line-fill" id="timelineFill"></div></div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2023</span>
+            <h3>Started Learning Programming</h3>
+            <p>Picked up HTML and CSS out of curiosity.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2024</span>
+            <h3>University</h3>
+            <p>Enrolled in a Computer Science program and went deeper into logic and structure.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2025</span>
+            <h3>First Portfolio</h3>
+            <p>Designed and shipped my first personal portfolio, learning JavaScript along the way.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2026 – Present</span>
+            <h3>Freelance Projects</h3>
+            <p>Started taking on freelance frontend work for small businesses and startups.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATISTICS -->
+  <section class="section stats-section section-alt" id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="1">0</span><span class="stat-suffix">+</span>
+          <p>Projects Completed</p>
+        </div>
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="5">0</span><span class="stat-suffix">+</span>
+          <p>Happy Clients</p>
+        </div>
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="2">0</span><span class="stat-suffix">+</span>
+          <p>Years Learning</p>
+        </div>
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="1">0</span><span class="stat-suffix">+</span>
+          <p>Certificates</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" id="testimonials">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Testimonials</p>
+      <h2 class="section-title reveal-up">Kind words from clients</h2>
+      <div class="testimonial-slider reveal-up">
+        <div class="testimonial-track" id="testimonialTrack">
+          <div class="testimonial-card">
+            <p>"shimul turned our vague idea into a clean, working site faster than we expected. Great communication throughout."</p>
+            <div class="testimonial-author"><strong>Tanvir Islam</strong><span>Founder, Cafe Aroma</span></div>
+          </div>
+          <div class="testimonial-card">
+            <p>"Extremely detail-oriented. The animations and layout felt premium without being flashy."</p>
+            <div class="testimonial-author"><strong>Nusrat Jahan</strong><span>Product Manager, Ledger</span></div>
+          </div>
+          <div class="testimonial-card">
+            <p>"Delivered exactly what we asked for, on time, and suggested improvements we hadn't thought of."</p>
+            <div class="testimonial-author"><strong>Imran Kabir</strong><span>Co-founder, Taskly</span></div>
+          </div>
+        </div>
+        <div class="testimonial-dots" id="testimonialDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARTICLES -->
+  <section class="section section-alt" id="articles">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Articles</p>
+      <h2 class="section-title reveal-up">Thoughts &amp; insights</h2>
+      <div class="articles-grid">
+        <article class="article-card glass-card reveal-up">
+          <h3>Getting Started with Frontend Development</h3>
+          <p class="article-excerpt">A beginner's guide to HTML, CSS, and JavaScript. Learn the fundamentals and build your first web page.</p>
+          <div class="article-meta">
+            <span class="article-date">July 2024</span>
+            <a href="#" class="article-link">Read More →</a>
+          </div>
+        </article>
+        <article class="article-card glass-card reveal-up">
+          <h3>Web Design Best Practices</h3>
+          <p class="article-excerpt">Explore key principles for creating beautiful, accessible, and user-friendly web interfaces.</p>
+          <div class="article-meta">
+            <span class="article-date">June 2024</span>
+            <a href="#" class="article-link">Read More →</a>
+          </div>
+        </article>
+        <article class="article-card glass-card reveal-up">
+          <h3>Responsive Design Techniques</h3>
+          <p class="article-excerpt">Master media queries and mobile-first design to create websites that work on all devices.</p>
+          <div class="article-meta">
+            <span class="article-date">May 2024</span>
+            <a href="#" class="article-link">Read More →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Contact</p>
+      <h2 class="section-title reveal-up">Let's build something together</h2>
+      <div class="contact-grid">
+        <form class="contact-form glass-card reveal-up" id="contactForm">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What's this about?" required>
+          </div>
+          <div class="form-field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary ripple" id="submitBtn">Send Message</button>
+          <p class="form-status" id="formStatus" aria-live="polite"></p>
+        </form>
+        <div class="contact-info reveal-up">
+          <div class="glass-card contact-info-card">
+            <h3>Get in touch</h3>
+            <ul class="contact-list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.5"/><path d="m3 7 9 6 9-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>sl039978@gmail.com</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.25a2 2 0 0 1 2.11-.45c.9.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span>01821022934</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span>Dhaka,Bangladesh</span>
+              </li>
+            </ul>
+            <div class="social-icons">
+              <a href="https://github.com/shimulkanjilal" aria-label="GitHub" class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+              <a href="https://www.linkedin.com/in/shimul-kanjilal/" aria-label="LinkedIn" class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.76-2.05C21.9 8.65 23 11.1 23 14.5V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1V21h-4V9Z"/></svg></a>
+              <a href="https://twitter.com/Shimulkanjilal6" aria-label="Twitter / X" class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H21.6l-5.9 6.75L22.7 21h-5.4l-4.2-5.5L8.3 21H5.6l6.3-7.2L4.5 3h5.5l3.8 5.03L18.9 3Zm-.9 16.2h1.5L7.1 4.7H5.5l12.5 14.5Z"/></svg></a>
+              <a href="https://instagram.com/shimulkanjilal" aria-label="Instagram" class="social-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <a href="#hero" class="logo">SK<span>.</span></a>
+    <nav class="footer-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <p class="footer-copy">&copy; <span id="year"></span> SK. All rights reserved.</p>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<script src="script.js"></script>
+</body>
+</html>

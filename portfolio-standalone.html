@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rafi Ahmed — Frontend Developer & UI Designer</title>
+<meta name="description" content="Portfolio of Rafi Ahmed, a frontend developer and UI designer crafting fast, minimal, and thoughtful interfaces.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================
+   1. Root variables & reset
+=========================== */
+:root {
+  --bg: #0F172A;
+  --bg-alt: #0B1222;
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-bg-hover: rgba(255, 255, 255, 0.12);
+  --primary: #3B82F6;
+  --secondary: #8B5CF6;
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --border: rgba(255, 255, 255, .12);
+
+  --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+  --font-display: 'Poppins', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea { font-family: inherit; }
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+::selection { background: var(--primary); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+/* ===========================
+   2. Loader
+=========================== */
+.loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 24px;
+  transition: opacity .6s var(--ease), visibility .6s var(--ease);
+}
+.loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-mark { display: flex; gap: 2px; font-size: 2.2rem; font-weight: 700; }
+.loader-mark span {
+  display: inline-block;
+  background: var(--gradient);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: loaderBounce 1s ease-in-out infinite;
+}
+.loader-mark span:nth-child(2) { animation-delay: .15s; }
+@keyframes loaderBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.loader-bar { width: 160px; height: 3px; background: var(--border); border-radius: 10px; overflow: hidden; }
+.loader-bar-fill { width: 0%; height: 100%; background: var(--gradient); animation: loaderFill 1.4s var(--ease) forwards; }
+@keyframes loaderFill { to { width: 100%; } }
+
+/* ===========================
+   3. Cursor glow & scroll progress
+=========================== */
+.cursor-glow {
+  position: fixed; top: 0; left: 0; width: 420px; height: 420px;
+  border-radius: 50%; pointer-events: none; z-index: 2;
+  background: radial-gradient(circle, rgba(59,130,246,.16), rgba(139,92,246,.08) 45%, transparent 72%);
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+  transition: opacity .4s ease;
+  opacity: 0;
+}
+@media (hover: hover) { .cursor-glow.active { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .cursor-glow { display: none; } }
+
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  background: var(--gradient); z-index: 1001;
+  transition: width .1s linear;
+}
+
+/* ===========================
+   4. Navbar
+=========================== */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 20px 0;
+  transition: padding .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+.navbar.scrolled {
+  padding: 12px 0;
+  background: rgba(15, 23, 42, .75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.logo { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; }
+.logo span { color: var(--primary); }
+.nav-links { display: flex; gap: 28px; flex: 1; justify-content: center; }
+.nav-link {
+  font-size: .92rem; color: var(--muted); position: relative; padding: 4px 0;
+  transition: color .25s ease;
+}
+.nav-link::after {
+  content: ''; position: absolute; left: 0; bottom: -2px; width: 0; height: 2px;
+  background: var(--gradient); transition: width .3s var(--ease);
+}
+.nav-link:hover, .nav-link.active { color: var(--text); }
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
+.nav-cta { white-space: nowrap; }
+
+.menu-toggle { display: none; flex-direction: column; gap: 5px; width: 26px; }
+.menu-toggle span { display: block; height: 2px; width: 100%; background: var(--text); border-radius: 2px; transition: transform .3s var(--ease), opacity .3s var(--ease); }
+.menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle.open span:nth-child(2) { opacity: 0; }
+.menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ===========================
+   5. Buttons
+=========================== */
+.btn {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 14px 28px; border-radius: 999px; font-weight: 600; font-size: .95rem;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+}
+.btn-sm { padding: 10px 20px; font-size: .85rem; }
+.btn-primary {
+  background: var(--gradient); color: #fff;
+  box-shadow: 0 8px 24px -8px rgba(59, 130, 246, .6);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -8px rgba(139, 92, 246, .55); }
+.btn-outline { border: 1px solid var(--border); color: var(--text); background: rgba(255,255,255,.03); }
+.btn-outline:hover { transform: translateY(-3px); border-color: var(--primary); background: rgba(59,130,246,.08); }
+
+.ripple { position: relative; }
+.ripple-circle {
+  position: absolute; border-radius: 50%; background: rgba(255,255,255,.45);
+  transform: scale(0); animation: rippleAnim .6s ease-out forwards; pointer-events: none;
+}
+@keyframes rippleAnim { to { transform: scale(3); opacity: 0; } }
+
+/* ===========================
+   6. Glass card
+=========================== */
+.glass-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: background .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+}
+
+.text-gradient {
+  background: var(--gradient);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ===========================
+   7. Hero
+=========================== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding-top: 100px;
+  overflow: hidden;
+}
+.hero-bg { position: absolute; inset: 0; z-index: 0; }
+.blob {
+  position: absolute; border-radius: 50%; filter: blur(90px); opacity: .35;
+  animation: floatBlob 14s ease-in-out infinite;
+}
+.blob-1 { width: 420px; height: 420px; background: var(--primary); top: -100px; right: -60px; }
+.blob-2 { width: 380px; height: 380px; background: var(--secondary); bottom: -80px; left: -60px; animation-delay: -6s; }
+@keyframes floatBlob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -40px) scale(1.08); }
+}
+.grid-overlay {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent);
+  opacity: .5;
+}
+
+.hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+.eyebrow { font-family: var(--font-mono); font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); margin-bottom: 18px; }
+.hero-title { font-size: clamp(2.2rem, 4.6vw, 3.6rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.12; margin-bottom: 22px; }
+.typing-wrap { color: var(--muted); font-weight: 500; font-size: .62em; display: inline-block; margin-top: 6px; }
+#typingText { color: var(--text); font-weight: 600; }
+.cursor-blink { color: var(--primary); animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.hero-desc { color: var(--muted); font-size: 1.05rem; max-width: 520px; margin-bottom: 34px; }
+.hero-cta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 44px; }
+.hero-meta { display: flex; gap: 36px; }
+.hero-meta-item { display: flex; flex-direction: column; }
+.hero-meta-item strong { font-size: 1.5rem; font-weight: 700; }
+.hero-meta-item span { font-size: .82rem; color: var(--muted); }
+
+.hero-visual { display: flex; justify-content: center; }
+.hero-photo-frame { position: relative; width: 320px; height: 320px; }
+.hero-photo {
+  width: 100%; height: 100%; border-radius: 32px; overflow: hidden;
+  border: 1px solid var(--border);
+  background: linear-gradient(160deg, rgba(59,130,246,.25), rgba(139,92,246,.2));
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,.6);
+  animation: photoFloat 6s ease-in-out infinite;
+}
+@keyframes photoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+.orbit-dot { position: absolute; border-radius: 50%; background: var(--gradient); }
+.orbit-1 { width: 14px; height: 14px; top: -6px; left: 20%; animation: orbitSpin 8s linear infinite; }
+.orbit-2 { width: 10px; height: 10px; bottom: 10%; right: -8px; animation: orbitSpin 10s linear infinite reverse; }
+.orbit-3 { width: 8px; height: 8px; bottom: -6px; left: 40%; animation: orbitSpin 12s linear infinite; }
+@keyframes orbitSpin { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+.floating-chip {
+  position: absolute; padding: 8px 14px; border-radius: 999px; font-size: .78rem;
+  background: rgba(15,23,42,.85); border: 1px solid var(--border); backdrop-filter: blur(10px);
+  animation: chipFloat 5s ease-in-out infinite;
+  white-space: nowrap;
+}
+.chip-1 { top: 10%; right: -14%; animation-delay: -1s; }
+.chip-2 { bottom: 8%; left: -12%; animation-delay: -3s; }
+@keyframes chipFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+.scroll-cue { position: absolute; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 1; }
+.scroll-cue span {
+  display: block; width: 22px; height: 36px; border: 2px solid var(--border); border-radius: 14px; position: relative;
+}
+.scroll-cue span::before {
+  content: ''; position: absolute; top: 6px; left: 50%; width: 4px; height: 8px; background: var(--primary);
+  border-radius: 4px; transform: translateX(-50%); animation: scrollCue 1.8s ease infinite;
+}
+@keyframes scrollCue { 0% { opacity: 1; top: 6px; } 100% { opacity: 0; top: 18px; } }
+
+/* ===========================
+   8. Sections generic
+=========================== */
+.section { padding: 120px 0; position: relative; }
+.section-alt { background: var(--bg-alt); }
+.section-eyebrow { font-family: var(--font-mono); color: var(--primary); text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; margin-bottom: 12px; }
+.section-title { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.02em; margin-bottom: 56px; max-width: 640px; }
+
+/* Reveal animations */
+.reveal-up, .reveal-left, .reveal-right { opacity: 0; transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.reveal-up { transform: translateY(40px); }
+.reveal-left { transform: translateX(-40px); }
+.reveal-right { transform: translateX(40px); }
+.reveal-up.in-view, .reveal-left.in-view, .reveal-right.in-view { opacity: 1; transform: translate(0, 0); }
+
+/* ===========================
+   9. About
+=========================== */
+.about-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.about-grid .glass-card { padding: 32px; }
+.about-grid h3 { font-size: 1.1rem; margin-bottom: 14px; }
+.about-grid p, .about-list span { color: var(--muted); font-size: .95rem; }
+.about-list li { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; }
+.about-list li:last-child { margin-bottom: 0; }
+.about-list strong { font-size: .98rem; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 10px; }
+.tag {
+  padding: 7px 14px; border-radius: 999px; font-size: .8rem; color: var(--text);
+  background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.25);
+}
+.glass-card:hover { transform: translateY(-4px); background: var(--card-bg-hover); box-shadow: 0 16px 40px -20px rgba(0,0,0,.5); }
+
+/* ===========================
+   10. Skills
+=========================== */
+.skills-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; }
+.skill-item { text-align: center; }
+.skill-ring { position: relative; width: 100px; height: 100px; margin: 0 auto 14px; }
+.skill-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
+.ring-fill {
+  fill: none; stroke: var(--primary); stroke-width: 8; stroke-linecap: round;
+  stroke-dasharray: 264; stroke-dashoffset: 264;
+  transition: stroke-dashoffset 1.4s var(--ease);
+}
+.skill-pct {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-weight: 600; font-size: .95rem;
+}
+.skill-name { color: var(--muted); font-size: .88rem; }
+
+/* ===========================
+   11. Services
+=========================== */
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.service-card { padding: 36px 30px; }
+.service-icon {
+  width: 54px; height: 54px; border-radius: 14px; margin-bottom: 22px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(59,130,246,.12); color: var(--primary);
+  transition: transform .3s var(--ease), background .3s var(--ease);
+}
+.service-icon svg { width: 26px; height: 26px; }
+.service-card:hover .service-icon { transform: rotate(-8deg) scale(1.08); background: var(--gradient); color: #fff; }
+.service-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
+.service-card p { color: var(--muted); font-size: .92rem; }
+
+/* ===========================
+   12. Projects
+=========================== */
+.project-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; margin-top: -24px; }
+.filter-btn {
+  padding: 10px 20px; border-radius: 999px; font-size: .86rem; font-weight: 500;
+  border: 1px solid var(--border); color: var(--muted); background: rgba(255,255,255,.03);
+  transition: color .3s ease, border-color .3s ease, background .3s var(--ease), transform .3s var(--ease);
+}
+.filter-btn:hover { color: var(--text); border-color: rgba(59,130,246,.4); transform: translateY(-2px); }
+.filter-btn.active { color: #fff; background: var(--gradient); border-color: transparent; box-shadow: 0 8px 20px -8px rgba(59,130,246,.55); }
+
+.projects-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  grid-auto-flow: dense;
+}
+.project-card {
+  border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border);
+  background: var(--card-bg); display: flex; flex-direction: column;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease), opacity .3s ease;
+}
+.project-card.is-hidden { display: none; }
+.project-card-featured { grid-column: span 2; grid-row: span 2; }
+.project-card-featured .project-img { aspect-ratio: 16/11; }
+.project-card-featured h3 { font-size: 1.35rem; }
+.project-card-featured p { font-size: .98rem; }
+
+.project-card:hover { transform: translateY(-8px) scale(1.015); box-shadow: 0 30px 50px -20px rgba(59,130,246,.35); border-color: rgba(59,130,246,.4); }
+.project-img { position: relative; aspect-ratio: 16/10; overflow: hidden; }
+.project-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease), filter .5s var(--ease); }
+.project-card:hover .project-img img { transform: scale(1.08); filter: saturate(1.15); }
+
+.project-overlay {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 14px;
+  background: linear-gradient(180deg, rgba(15,23,42,.15), rgba(15,23,42,.75));
+  opacity: 0; transition: opacity .35s var(--ease);
+}
+.project-card:hover .project-overlay { opacity: 1; }
+.icon-btn {
+  width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(248,250,252,.12); border: 1px solid rgba(248,250,252,.3); color: #fff;
+  backdrop-filter: blur(6px);
+  transform: translateY(14px); opacity: 0;
+  transition: transform .4s var(--ease), opacity .4s var(--ease), background .3s ease;
+}
+.project-card:hover .icon-btn { transform: translateY(0); opacity: 1; }
+.project-card:hover .icon-btn:nth-child(2) { transition-delay: .06s; }
+.icon-btn:hover { background: var(--gradient); border-color: transparent; }
+.icon-btn svg { width: 20px; height: 20px; }
+
+.project-body { padding: 24px; display: flex; flex-direction: column; flex: 1; position: relative; }
+.project-index {
+  font-family: var(--font-mono); font-size: .78rem; color: var(--primary); opacity: .8; margin-bottom: 6px;
+}
+.project-body h3 { font-size: 1.08rem; margin-bottom: 8px; }
+.project-body p { color: var(--muted); font-size: .9rem; margin-bottom: 16px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; margin-top: auto; }
+.tag-row .tag { padding: 5px 11px; font-size: .74rem; }
+.project-links { display: flex; gap: 12px; }
+.link-btn {
+  flex: 1; text-align: center; padding: 10px 14px; border-radius: 10px; font-size: .84rem; font-weight: 600;
+  background: var(--gradient); color: #fff; transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.link-btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
+.link-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -8px rgba(59,130,246,.5); }
+
+/* ===========================
+   13. Timeline
+=========================== */
+.timeline { position: relative; max-width: 720px; margin: 0 auto; }
+.timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.timeline-line-fill { width: 100%; height: 0%; background: var(--gradient); transition: height 1s var(--ease); box-shadow: 0 0 12px var(--primary); }
+.timeline-item { position: relative; padding-left: 60px; margin-bottom: 40px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-dot {
+  position: absolute; left: 12px; top: 6px; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--bg); border: 3px solid var(--primary); z-index: 1;
+  box-shadow: 0 0 0 6px rgba(59,130,246,.12);
+}
+.timeline-content { padding: 22px 26px; }
+.timeline-date { font-family: var(--font-mono); font-size: .78rem; color: var(--primary); }
+.timeline-content h3 { margin: 8px 0 8px; font-size: 1.05rem; }
+.timeline-content p { color: var(--muted); font-size: .92rem; }
+
+/* ===========================
+   14. Stats
+=========================== */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+.stat-item { padding: 20px; }
+.stat-number { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat-suffix { font-size: 1.6rem; font-weight: 800; color: var(--secondary); }
+.stat-item p { color: var(--muted); margin-top: 8px; font-size: .9rem; }
+
+/* ===========================
+   15. Testimonials
+=========================== */
+.testimonial-slider { max-width: 700px; margin: 0 auto; overflow: hidden; }
+.testimonial-track { display: flex; transition: transform .5s var(--ease); }
+.testimonial-card {
+  min-width: 100%; padding: 40px; text-align: center;
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius-lg);
+}
+.testimonial-card p { font-size: 1.1rem; font-style: italic; margin-bottom: 24px; }
+.testimonial-author strong { display: block; font-size: 1rem; }
+.testimonial-author span { color: var(--muted); font-size: .85rem; }
+.testimonial-dots { display: flex; justify-content: center; gap: 10px; margin-top: 24px; }
+.testimonial-dots button {
+  width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .3s ease, transform .3s ease;
+}
+.testimonial-dots button.active { background: var(--primary); transform: scale(1.3); }
+
+/* ===========================
+   16. Gallery
+=========================== */
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.gallery-item { position: relative; border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 1/1; cursor: pointer; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease), filter .5s var(--ease); }
+.gallery-item::after {
+  content: '+'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; color: #fff; background: rgba(15,23,42,.55); backdrop-filter: blur(4px);
+  opacity: 0; transition: opacity .35s ease;
+}
+.gallery-item:hover img { transform: scale(1.12); filter: blur(1px); }
+.gallery-item:hover::after { opacity: 1; }
+
+.lightbox {
+  position: fixed; inset: 0; background: rgba(2,6,20,.92); z-index: 2000;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s ease;
+}
+.lightbox.open { opacity: 1; visibility: visible; }
+.lightbox img { max-width: 88vw; max-height: 84vh; border-radius: 14px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+.lightbox-close {
+  position: absolute; top: 28px; right: 32px; font-size: 2rem; color: #fff; line-height: 1;
+  width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.1);
+  transition: background .3s ease, transform .3s ease;
+}
+.lightbox-close:hover { background: rgba(255,255,255,.2); transform: rotate(90deg); }
+
+/* ===========================
+   17. Contact
+=========================== */
+.contact-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; align-items: start; }
+.contact-form { padding: 36px; display: flex; flex-direction: column; gap: 20px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-field { display: flex; flex-direction: column; gap: 8px; }
+.form-field label { font-size: .84rem; color: var(--muted); }
+.form-field input, .form-field textarea {
+  background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; color: var(--text); font-size: .92rem; resize: vertical;
+  transition: border-color .3s ease, background .3s ease, box-shadow .3s ease;
+}
+.form-field input:focus, .form-field textarea:focus {
+  outline: none; border-color: var(--primary); background: rgba(59,130,246,.06);
+  box-shadow: 0 0 0 4px rgba(59,130,246,.15);
+}
+.form-field input::placeholder, .form-field textarea::placeholder { color: #64748B; }
+.form-status { font-size: .85rem; color: var(--secondary); min-height: 1.2em; }
+
+.contact-info-card { padding: 32px; }
+.contact-info-card h3 { margin-bottom: 20px; font-size: 1.1rem; }
+.contact-list { display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
+.contact-list li { display: flex; align-items: center; gap: 14px; color: var(--muted); font-size: .92rem; }
+.contact-list svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--primary); }
+.social-icons { display: flex; gap: 12px; }
+.social-icon {
+  width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border);
+  transition: transform .3s var(--ease), background .3s ease, color .3s ease;
+}
+.social-icon svg { width: 18px; height: 18px; }
+.social-icon:hover { transform: translateY(-4px); background: var(--gradient); }
+
+/* ===========================
+   18. Footer
+=========================== */
+.footer { border-top: 1px solid var(--border); padding: 36px 0; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { color: var(--muted); font-size: .9rem; transition: color .25s ease; }
+.footer-links a:hover { color: var(--text); }
+.footer-copy { color: var(--muted); font-size: .84rem; }
+
+.back-to-top {
+  position: fixed; bottom: 28px; right: 28px; width: 46px; height: 46px; border-radius: 50%;
+  background: var(--gradient); display: flex; align-items: center; justify-content: center; z-index: 900;
+  box-shadow: 0 10px 24px -8px rgba(59,130,246,.6);
+  opacity: 0; visibility: hidden; transform: translateY(10px);
+  transition: opacity .3s ease, visibility .3s ease, transform .3s ease;
+}
+.back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.back-to-top svg { width: 20px; height: 20px; color: #fff; }
+.back-to-top:hover { transform: translateY(-4px); }
+
+
+/* ===========================
+   Tablet ( <= 1024px )
+=========================== */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 56px; }
+  .hero-desc { margin-left: auto; margin-right: auto; }
+  .hero-cta, .hero-meta { justify-content: center; }
+  .hero-visual { order: -1; }
+
+  .about-grid { grid-template-columns: 1fr 1fr; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); row-gap: 32px; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .projects-grid { grid-template-columns: 1fr 1fr; }
+  .project-card-featured { grid-column: span 2; grid-row: span 1; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); row-gap: 32px; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* ===========================
+   Mobile nav ( <= 900px )
+=========================== */
+@media (max-width: 900px) {
+  .nav-links {
+    position: fixed; top: 0; right: -100%; height: 100vh; width: min(320px, 80vw);
+    background: rgba(15, 23, 42, .97); backdrop-filter: blur(20px);
+    flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+    transition: right .4s var(--ease);
+    border-left: 1px solid var(--border);
+  }
+  .nav-links.open { right: 0; }
+  .nav-cta { display: none; }
+  .menu-toggle { display: flex; z-index: 1100; }
+}
+
+/* ===========================
+   Small tablet / large phone ( <= 768px )
+=========================== */
+@media (max-width: 768px) {
+  .section { padding: 80px 0; }
+  .section-title { margin-bottom: 40px; }
+
+  .about-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); }
+  .services-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-card-featured { grid-column: span 1; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+
+  .hero-photo-frame { width: 260px; height: 260px; }
+  .floating-chip { font-size: .7rem; padding: 6px 12px; }
+  .chip-1 { right: -6%; }
+  .chip-2 { left: -6%; }
+}
+
+/* ===========================
+   Mobile ( <= 480px )
+=========================== */
+@media (max-width: 480px) {
+  .container { padding: 0 18px; }
+  .hero { padding-top: 120px; }
+  .hero-title { font-size: 2rem; }
+  .hero-meta { gap: 22px; flex-wrap: wrap; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .testimonial-card { padding: 28px 22px; }
+  .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
+  .footer-inner { flex-direction: column; text-align: center; }
+}
+
+/* ===========================
+   Reduced motion
+=========================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loader" id="loader">
+  <div class="loader-mark">
+    <span>R</span><span>A</span>
+  </div>
+  <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+</div>
+
+<!-- Cursor Glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Navbar -->
+<header class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="#hero" class="logo">RA<span>.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#experience" class="nav-link">Journey</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+      <a href="#gallery" class="nav-link">Gallery</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary btn-sm nav-cta">Let's Talk</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg" id="heroBg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-text reveal-up">
+        <p class="eyebrow">Frontend Developer &middot; UI Designer</p>
+        <h1 class="hero-title">
+          Hi, I'm <span class="text-gradient">Rafi Ahmed</span><br>
+          <span class="typing-wrap">I build <span id="typingText"></span><span class="cursor-blink">|</span></span>
+        </h1>
+        <p class="hero-desc">
+          I design and build clean, fast, and accessible interfaces — turning
+          ideas into products people enjoy using, one pixel and one commit at a time.
+        </p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary ripple">View Projects</a>
+          <a href="#contact" class="btn btn-outline ripple">Contact Me</a>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-item"><strong>3+</strong><span>Years learning</span></div>
+          <div class="hero-meta-item"><strong>25+</strong><span>Projects built</span></div>
+          <div class="hero-meta-item"><strong>12+</strong><span>Happy clients</span></div>
+        </div>
+      </div>
+      <div class="hero-visual reveal-right">
+        <div class="hero-photo-frame">
+          <div class="hero-photo">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZzEiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzNCODJGNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM4QjVDRjYiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSIjMEYxNzJBIi8+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSI0MDAiIGZpbGw9InVybCgjZzEpIiBvcGFjaXR5PSIwLjI1Ii8+CiAgPGNpcmNsZSBjeD0iMjAwIiBjeT0iMTYwIiByPSI3MCIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC44NSIvPgogIDxwYXRoIGQ9Ik04MCAzNjBjMTAtODAgNjAtMTIwIDEyMC0xMjBzMTEwIDQwIDEyMCAxMjAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuODUiLz4KPC9zdmc+Cg==" alt="Portrait of Rafi Ahmed" loading="eager">
+          </div>
+          <div class="orbit-dot orbit-1"></div>
+          <div class="orbit-dot orbit-2"></div>
+          <div class="orbit-dot orbit-3"></div>
+          <div class="floating-chip chip-1">⚡ Available for work</div>
+          <div class="floating-chip chip-2">📍 Dhaka, BD</div>
+        </div>
+      </div>
+    </div>
+    <a href="#about" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">About</p>
+      <h2 class="section-title reveal-up">A little about how I work &amp; why</h2>
+      <div class="about-grid">
+        <div class="glass-card about-bio reveal-up">
+          <h3>Bio</h3>
+          <p>I'm a frontend developer based in Dhaka, Bangladesh, focused on building
+          interfaces that feel effortless. I care about the small details — the
+          easing curve on a hover, the spacing between two lines of text — because
+          those details are what make a product feel finished.</p>
+        </div>
+        <div class="glass-card about-edu reveal-up">
+          <h3>Education</h3>
+          <ul class="about-list">
+            <li><strong>B.Sc. in Computer Science</strong><span>University of Dhaka, 2022 – 2026</span></li>
+            <li><strong>Frontend Web Development</strong><span>Self-taught + online mentorship, 2023</span></li>
+          </ul>
+        </div>
+        <div class="glass-card about-interests reveal-up">
+          <h3>Interests</h3>
+          <div class="tag-cloud">
+            <span class="tag">UI Design</span>
+            <span class="tag">Design Systems</span>
+            <span class="tag">Motion Design</span>
+            <span class="tag">Typography</span>
+            <span class="tag">Photography</span>
+            <span class="tag">Chess</span>
+          </div>
+        </div>
+        <div class="glass-card about-goals reveal-up">
+          <h3>Goals</h3>
+          <p>Over the next year, I'm aiming to deepen my craft in design systems
+          and motion, contribute to open-source UI libraries, and work with teams
+          who care as much about polish as I do.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section section-alt" id="skills">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Skills</p>
+      <h2 class="section-title reveal-up">Tools I reach for</h2>
+      <div class="skills-grid">
+        <div class="skill-item reveal-up" data-level="92">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">HTML</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="88">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">CSS</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="85">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">JavaScript</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="75">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">Firebase</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="80">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">Git &amp; GitHub</p>
+        </div>
+        <div class="skill-item reveal-up" data-level="78">
+          <div class="skill-ring"><svg viewBox="0 0 100 100"><circle class="ring-bg" cx="50" cy="50" r="42"></circle><circle class="ring-fill" cx="50" cy="50" r="42"></circle></svg><span class="skill-pct">0%</span></div>
+          <p class="skill-name">Figma</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Services</p>
+      <h2 class="section-title reveal-up">What I can help you with</h2>
+      <div class="services-grid">
+        <div class="service-card glass-card reveal-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 14.5v-9Z" stroke="currentColor" stroke-width="1.5"/><path d="M3 8h18M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Web Design</h3>
+          <p>Clean, purposeful layouts that guide attention and make content easy to scan and act on.</p>
+        </div>
+        <div class="service-card glass-card reveal-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Frontend Development</h3>
+          <p>Fast, accessible, pixel-accurate builds using semantic HTML, modern CSS, and vanilla JS.</p>
+        </div>
+        <div class="service-card glass-card reveal-up">
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m14.24 5.24-2.12-2.12M8.88 8.88 6.76 6.76m10.48 0-2.12 2.12M8.88 15.12l-2.12 2.12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="3.5" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <h3>UI Design</h3>
+          <p>Design systems and interface components that stay consistent as a product grows.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section section-alt" id="projects">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Projects</p>
+      <h2 class="section-title reveal-up">Selected work</h2>
+
+      <div class="project-filters reveal-up" id="projectFilters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="app">Web Apps</button>
+        <button class="filter-btn" data-filter="web">Landing Pages</button>
+        <button class="filter-btn" data-filter="kit">UI Kits</button>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+
+        <article class="project-card project-card-featured reveal-up" data-category="app">
+          <div class="project-img">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMzQjgyRjYiIHN0b3Atb3BhY2l0eT0iMC4xNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwRjE3MkEiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0MCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwRjE3MkEiLz4KICA8cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNiZ2cpIi8+CiAgPCEtLSBicm93c2VyIGNocm9tZSAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM0IiBmaWxsPSIjMEIxMjIyIi8+CiAgPGNpcmNsZSBjeD0iMjAiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0VGNDQ0NCIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMzgiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0Y1OUUwQiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iNTYiIGN5PSIxNyIgcj0iNSIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iOTAiIHk9IjkiIHdpZHRoPSIyMjAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjMUUyOTNCIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzNCIgeDI9IjY0MCIgeTI9IjM0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMzQpIj4KICAgIAogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzY2IiBmaWxsPSIjMEYxNzJBIi8+CiAgPHJlY3QgeD0iNDAiIHk9IjM0IiB3aWR0aD0iMjMwIiBoZWlnaHQ9IjI5OCIgcng9IjIwIiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICA8Y2lyY2xlIGN4PSIxNTUiIGN5PSIxMTAiIHI9IjM0IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPHBhdGggZD0iTTEyMCAxNTBjMC0xNCAxMS0yNCAyNC0yNCAzLTE0IDE2LTI0IDMxLTI0IDE3IDAgMzEgMTIgMzQgMjggMTMgMiAyMiAxMyAyMiAyNiAwIDE0LTEyIDI2LTI2IDI2SDE0NGMtMTQgMC0yNC0xMS0yNC0yNCAwLTMgMC01IDAtOHoiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuOSIvPgogIDx0ZXh0IHg9IjE1NSIgeT0iMjE1IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iI0Y4RkFGQyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MjTCsEM8L3RleHQ+CiAgPHRleHQgeD0iMTU1IiB5PSIyNDAiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjOTRBM0I4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QYXJ0bHkgQ2xvdWR5IMK3IERoYWthPC90ZXh0PgogIDxyZWN0IHg9IjYwIiB5PSIyNzAiIHdpZHRoPSI3MCIgaGVpZ2h0PSI0MiIgcng9IjEwIiBmaWxsPSIjMEYxNzJBIi8+CiAgPHJlY3QgeD0iMTQ1IiB5PSIyNzAiIHdpZHRoPSI3MCIgaGVpZ2h0PSI0MiIgcng9IjEwIiBmaWxsPSIjMEYxNzJBIi8+CiAgPHJlY3QgeD0iMjkwIiB5PSI2MCIgd2lkdGg9IjI5MCIgaGVpZ2h0PSI3MCIgcng9IjE2IiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICA8dGV4dCB4PSIzMTIiIHk9Ijg4IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzk0QTNCOCI+VGhpcyB3ZWVrPC90ZXh0PgogIDx0ZXh0IHg9IjMxMiIgeT0iMTEyIiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNiIgZmlsbD0iI0Y4RkFGQyIgZm9udC13ZWlnaHQ9IjYwMCI+U3Vubnkgd2l0aCBsaWdodCByYWluIFRodTwvdGV4dD4KICA8cmVjdCB4PSIyOTAiIHk9IjE0NiIgd2lkdGg9IjEzOCIgaGVpZ2h0PSI5MCIgcng9IjE0IiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICA8cmVjdCB4PSI0NDAiIHk9IjE0NiIgd2lkdGg9IjE0MCIgaGVpZ2h0PSI5MCIgcng9IjE0IiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICA8dGV4dCB4PSIzMDgiIHk9IjE4MCIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5NEEzQjgiPkh1bWlkaXR5PC90ZXh0PgogIDx0ZXh0IHg9IjMwOCIgeT0iMjEwIiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgZmlsbD0iI0Y4RkFGQyIgZm9udC13ZWlnaHQ9IjcwMCI+NjIlPC90ZXh0PgogIDx0ZXh0IHg9IjQ1OCIgeT0iMTgwIiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzk0QTNCOCI+V2luZDwvdGV4dD4KICA8dGV4dCB4PSI0NTgiIHk9IjIxMCIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjIiIGZpbGw9IiNGOEZBRkMiIGZvbnQtd2VpZ2h0PSI3MDAiPjExIGttL2g8L3RleHQ+CiAgPHJlY3QgeD0iMjkwIiB5PSIyNTIiIHdpZHRoPSIyOTAiIGhlaWdodD0iODAiIHJ4PSIxNCIgZmlsbD0iIzFBMjQzNiIgc3Ryb2tlPSIjMzM0MTU1Ii8+CiAgPHRleHQgeD0iMzEyIiB5PSIyNzgiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTRBM0I4Ij5TdW5yaXNlIMK3IFN1bnNldDwvdGV4dD4KICA8dGV4dCB4PSIzMTIiIHk9IjMwNCIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTYiIGZpbGw9IiNGOEZBRkMiIGZvbnQtd2VpZ2h0PSI2MDAiPjU6NDIgQU0g4oCUIDY6MTggUE08L3RleHQ+CgogIDwvZz4KPC9zdmc+" alt="Preview of Nimbus Weather App" loading="lazy">
+            <div class="project-overlay">
+              <a href="#" class="icon-btn" aria-label="View live demo">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a href="#" class="icon-btn" aria-label="View source on GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-index">01</span>
+            <h3>Nimbus — Weather App</h3>
+            <p>A minimal weather dashboard with animated forecasts, geolocation search, and a 5-day outlook.</p>
+            <div class="tag-row"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JS</span><span class="tag">Weather API</span></div>
+            <div class="project-links">
+              <a href="#" class="link-btn">Live Demo</a>
+              <a href="#" class="link-btn link-btn-ghost">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal-up" data-category="app">
+          <div class="project-img">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM4QjVDRjYiIHN0b3Atb3BhY2l0eT0iMC4xNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwRjE3MkEiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0MCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwRjE3MkEiLz4KICA8cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNiZ2cpIi8+CiAgPCEtLSBicm93c2VyIGNocm9tZSAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM0IiBmaWxsPSIjMEIxMjIyIi8+CiAgPGNpcmNsZSBjeD0iMjAiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0VGNDQ0NCIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMzgiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0Y1OUUwQiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iNTYiIGN5PSIxNyIgcj0iNSIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iOTAiIHk9IjkiIHdpZHRoPSIyMjAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjMUUyOTNCIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzNCIgeDI9IjY0MCIgeTI9IjM0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMzQpIj4KICAgIAogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzY2IiBmaWxsPSIjMEYxNzJBIi8+CiAgPHRleHQgeD0iNDAiIHk9IjU1IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk0QTNCOCI+QmFsYW5jZTwvdGV4dD4KICA8cmVjdCB4PSI0MCIgeT0iNzQiIHdpZHRoPSIyMzAiIGhlaWdodD0iMzYiIHJ4PSIxMCIgZmlsbD0iIzFBMjQzNiIgc3Ryb2tlPSIjMzM0MTU1Ii8+CiAgICA8Y2lyY2xlIGN4PSI2MiIgY3k9IjkyIiByPSIxMCIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC44Ii8+CiAgICA8dGV4dCB4PSI4MiIgeT0iOTciIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjRjhGQUZDIj5Hcm9jZXJpZXM8L3RleHQ+CiAgICA8dGV4dCB4PSIyNDgiIHk9Ijk3IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzk0QTNCOCIgdGV4dC1hbmNob3I9ImVuZCI+LSQ2NDwvdGV4dD48cmVjdCB4PSI0MCIgeT0iMTIwIiB3aWR0aD0iMjMwIiBoZWlnaHQ9IjM2IiByeD0iMTAiIGZpbGw9IiMxQTI0MzYiIHN0cm9rZT0iIzMzNDE1NSIvPgogICAgPGNpcmNsZSBjeD0iNjIiIGN5PSIxMzgiIHI9IjEwIiBmaWxsPSIjOEI1Q0Y2IiBvcGFjaXR5PSIwLjgiLz4KICAgIDx0ZXh0IHg9IjgyIiB5PSIxNDMiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjRjhGQUZDIj5TYWxhcnk8L3RleHQ+CiAgICA8dGV4dCB4PSIyNDgiIHk9IjE0MyIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiMzNEQzOTkiIHRleHQtYW5jaG9yPSJlbmQiPiskMiw0MDA8L3RleHQ+PHJlY3QgeD0iNDAiIHk9IjE2NiIgd2lkdGg9IjIzMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICAgIDxjaXJjbGUgY3g9IjYyIiBjeT0iMTg0IiByPSIxMCIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC44Ii8+CiAgICA8dGV4dCB4PSI4MiIgeT0iMTg5IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iI0Y4RkFGQyI+UmVudDwvdGV4dD4KICAgIDx0ZXh0IHg9IjI0OCIgeT0iMTg5IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzk0QTNCOCIgdGV4dC1hbmNob3I9ImVuZCI+LSQ2MjA8L3RleHQ+PHJlY3QgeD0iNDAiIHk9IjIxMiIgd2lkdGg9IjIzMCIgaGVpZ2h0PSIzNiIgcng9IjEwIiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICAgIDxjaXJjbGUgY3g9IjYyIiBjeT0iMjMwIiByPSIxMCIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44Ii8+CiAgICA8dGV4dCB4PSI4MiIgeT0iMjM1IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiIgZmlsbD0iI0Y4RkFGQyI+RnJlZWxhbmNlPC90ZXh0PgogICAgPHRleHQgeD0iMjQ4IiB5PSIyMzUiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjMzREMzk5IiB0ZXh0LWFuY2hvcj0iZW5kIj4rJDMxMDwvdGV4dD48cmVjdCB4PSI0MCIgeT0iMjU4IiB3aWR0aD0iMjMwIiBoZWlnaHQ9IjM2IiByeD0iMTAiIGZpbGw9IiMxQTI0MzYiIHN0cm9rZT0iIzMzNDE1NSIvPgogICAgPGNpcmNsZSBjeD0iNjIiIGN5PSIyNzYiIHI9IjEwIiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjgiLz4KICAgIDx0ZXh0IHg9IjgyIiB5PSIyODEiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjRjhGQUZDIj5VdGlsaXRpZXM8L3RleHQ+CiAgICA8dGV4dCB4PSIyNDgiIHk9IjI4MSIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5NEEzQjgiIHRleHQtYW5jaG9yPSJlbmQiPi0kODg8L3RleHQ+CiAgPHJlY3QgeD0iMjkwIiB5PSIzNCIgd2lkdGg9IjI5MCIgaGVpZ2h0PSIyOTgiIHJ4PSIxNiIgZmlsbD0iIzFBMjQzNiIgc3Ryb2tlPSIjMzM0MTU1Ii8+CiAgPHRleHQgeD0iMzEyIiB5PSI2NiIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5NEEzQjgiPlNwZW5kaW5nIG92ZXJ2aWV3PC90ZXh0PgogIDxsaW5lIHgxPSIyOTAiIHkxPSIzMDAiIHgyPSI1ODAiIHkyPSIzMDAiIHN0cm9rZT0iIzMzNDE1NSIvPgogIDxyZWN0IHg9IjMwMCIgeT0iMjQwIiB3aWR0aD0iMjIiIGhlaWdodD0iNjAiIHJ4PSI1IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMzM4IiB5PSIxOTAiIHdpZHRoPSIyMiIgaGVpZ2h0PSIxMTAiIHJ4PSI1IiBmaWxsPSIjOEI1Q0Y2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMzc2IiB5PSIyMjAiIHdpZHRoPSIyMiIgaGVpZ2h0PSI4MCIgcng9IjUiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSI0MTQiIHk9IjE2MCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjE0MCIgcng9IjUiIGZpbGw9IiM4QjVDRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSI0NTIiIHk9IjIwNSIgd2lkdGg9IjIyIiBoZWlnaHQ9Ijk1IiByeD0iNSIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjQ5MCIgeT0iMTcwIiB3aWR0aD0iMjIiIGhlaWdodD0iMTMwIiByeD0iNSIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjUyOCIgeT0iMjMwIiB3aWR0aD0iMjIiIGhlaWdodD0iNzAiIHJ4PSI1IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+CgogIDwvZz4KPC9zdmc+" alt="Preview of Ledger budget tracker" loading="lazy">
+            <div class="project-overlay">
+              <a href="#" class="icon-btn" aria-label="View live demo"><svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <a href="#" class="icon-btn" aria-label="View source on GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-index">02</span>
+            <h3>Ledger — Budget Tracker</h3>
+            <p>A personal finance tracker with charts, categories, and Firebase sync.</p>
+            <div class="tag-row"><span class="tag">JS</span><span class="tag">Firebase</span><span class="tag">Chart.js</span></div>
+            <div class="project-links">
+              <a href="#" class="link-btn">Live Demo</a>
+              <a href="#" class="link-btn link-btn-ghost">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal-up" data-category="web">
+          <div class="project-img">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGNTlFMEIiIHN0b3Atb3BhY2l0eT0iMC4xNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwRjE3MkEiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0MCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwRjE3MkEiLz4KICA8cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNiZ2cpIi8+CiAgPCEtLSBicm93c2VyIGNocm9tZSAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM0IiBmaWxsPSIjMEIxMjIyIi8+CiAgPGNpcmNsZSBjeD0iMjAiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0VGNDQ0NCIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMzgiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0Y1OUUwQiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iNTYiIGN5PSIxNyIgcj0iNSIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iOTAiIHk9IjkiIHdpZHRoPSIyMjAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjMUUyOTNCIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzNCIgeDI9IjY0MCIgeTI9IjM0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMzQpIj4KICAgIAogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzY2IiBmaWxsPSIjMEYxNzJBIi8+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjY0MCIgaGVpZ2h0PSIzNjYiIGZpbGw9InVybCgjYmdnKSIvPgogIDxyZWN0IHg9IjQwIiB5PSI1MCIgd2lkdGg9IjI3MCIgaGVpZ2h0PSIxNCIgcng9IjciIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuMTUiLz4KICA8dGV4dCB4PSI0MCIgeT0iMTMwIiBmb250LWZhbWlseT0iUG9wcGlucywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNGOEZBRkMiPkNvZmZlZSwgbWFkZTwvdGV4dD4KICA8dGV4dCB4PSI0MCIgeT0iMTY4IiBmb250LWZhbWlseT0iUG9wcGlucywgc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNGNTlFMEIiPndpdGggaW50ZW50aW9uLjwvdGV4dD4KICA8cmVjdCB4PSI0MCIgeT0iMTk2IiB3aWR0aD0iMjMwIiBoZWlnaHQ9IjEwIiByeD0iNSIgZmlsbD0iIzk0QTNCOCIgb3BhY2l0eT0iMC42Ii8+CiAgPHJlY3QgeD0iNDAiIHk9IjIxNCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIxMCIgcng9IjUiIGZpbGw9IiM5NEEzQjgiIG9wYWNpdHk9IjAuNCIvPgogIDxyZWN0IHg9IjQwIiB5PSIyNTAiIHdpZHRoPSIxNDAiIGhlaWdodD0iNDIiIHJ4PSIyMSIgZmlsbD0iI0Y1OUUwQiIvPgogIDx0ZXh0IHg9IjExMCIgeT0iMjc2IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzBGMTcyQSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+T3JkZXIgTm93PC90ZXh0PgogIDxjaXJjbGUgY3g9IjQ3MCIgY3k9IjE4MCIgcj0iMTIwIiBmaWxsPSIjRjU5RTBCIiBvcGFjaXR5PSIwLjE4Ii8+CiAgPHJlY3QgeD0iMzgwIiB5PSI4MCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIyMDAiIHJ4PSIyMCIgZmlsbD0iIzFBMjQzNiIgc3Ryb2tlPSIjMzM0MTU1Ii8+CiAgPGVsbGlwc2UgY3g9IjQ3MCIgY3k9IjE1MCIgcng9IjUwIiByeT0iMTQiIGZpbGw9IiNGNTlFMEIiIG9wYWNpdHk9IjAuOSIvPgogIDxyZWN0IHg9IjQzMCIgeT0iMTUwIiB3aWR0aD0iODAiIGhlaWdodD0iOTAiIHJ4PSIxMCIgZmlsbD0iIzdDNEEyRCIvPgoKICA8L2c+Cjwvc3ZnPg==" alt="Preview of Cafe Aroma landing page" loading="lazy">
+            <div class="project-overlay">
+              <a href="#" class="icon-btn" aria-label="View live demo"><svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <a href="#" class="icon-btn" aria-label="View source on GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-index">03</span>
+            <h3>Café Aroma — Landing Page</h3>
+            <p>A warm, story-driven landing page for a local coffee shop.</p>
+            <div class="tag-row"><span class="tag">HTML</span><span class="tag">CSS</span></div>
+            <div class="project-links">
+              <a href="#" class="link-btn">Live Demo</a>
+              <a href="#" class="link-btn link-btn-ghost">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal-up" data-category="app">
+          <div class="project-img">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM4QjVDRjYiIHN0b3Atb3BhY2l0eT0iMC4xNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwRjE3MkEiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0MCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwRjE3MkEiLz4KICA8cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNiZ2cpIi8+CiAgPCEtLSBicm93c2VyIGNocm9tZSAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM0IiBmaWxsPSIjMEIxMjIyIi8+CiAgPGNpcmNsZSBjeD0iMjAiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0VGNDQ0NCIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMzgiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0Y1OUUwQiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iNTYiIGN5PSIxNyIgcj0iNSIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iOTAiIHk9IjkiIHdpZHRoPSIyMjAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjMUUyOTNCIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzNCIgeDI9IjY0MCIgeTI9IjM0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMzQpIj4KICAgIAogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzY2IiBmaWxsPSIjMEYxNzJBIi8+CiAgPHRleHQgeD0iNDAiIHk9IjU1IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI0Y4RkFGQyI+VG9kYXk8L3RleHQ+CiAgPHJlY3QgeD0iNDAiIHk9IjcwIiB3aWR0aD0iMjkwIiBoZWlnaHQ9IjQyIiByeD0iMTIiIGZpbGw9IiMxQTI0MzYiIHN0cm9rZT0iIzMzNDE1NSIvPgogICAgPHJlY3QgeD0iNjAiIHk9IjgxIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHJ4PSI2IiBmaWxsPSIjM0I4MkY2IiBzdHJva2U9IiMzQjgyRjYiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgPHBhdGggZD0iTTU2IDgyIGw0IDUgbDggLTkiIHN0cm9rZT0iI0Y4RkFGQyIgc3Ryb2tlLXdpZHRoPSIyLjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogICAgPHRleHQgeD0iODgiIHk9Ijk2IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC41Ij5EZXNpZ24gbGFuZGluZyBwYWdlPC90ZXh0PgogICAgPGxpbmUgeDE9Ijg4IiB5MT0iNzkiIHgyPSIyMDUuOCIgeTI9Ijc5IiBzdHJva2U9IiM5NEEzQjgiIHN0cm9rZS13aWR0aD0iMS40Ii8+PHJlY3QgeD0iNDAiIHk9IjEyNCIgd2lkdGg9IjI5MCIgaGVpZ2h0PSI0MiIgcng9IjEyIiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICAgIDxyZWN0IHg9IjYwIiB5PSIxMzUiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcng9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzNDE1NSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICAKICAgIDx0ZXh0IHg9Ijg4IiB5PSIxNTAiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEzIiBmaWxsPSIjRjhGQUZDIiBvcGFjaXR5PSIwLjk1Ij5XaXJlIHVwIGNvbnRhY3QgZm9ybTwvdGV4dD4KICAgIDxyZWN0IHg9IjQwIiB5PSIxNzgiIHdpZHRoPSIyOTAiIGhlaWdodD0iNDIiIHJ4PSIxMiIgZmlsbD0iIzFBMjQzNiIgc3Ryb2tlPSIjMzM0MTU1Ii8+CiAgICA8cmVjdCB4PSI2MCIgeT0iMTg5IiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHJ4PSI2IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMiIvPgogICAgCiAgICA8dGV4dCB4PSI4OCIgeT0iMjA0IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC45NSI+V3JpdGUgcHJvamVjdCBSRUFETUU8L3RleHQ+CiAgICA8cmVjdCB4PSI0MCIgeT0iMjMyIiB3aWR0aD0iMjkwIiBoZWlnaHQ9IjQyIiByeD0iMTIiIGZpbGw9IiMxQTI0MzYiIHN0cm9rZT0iIzMzNDE1NSIvPgogICAgPHJlY3QgeD0iNjAiIHk9IjI0MyIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iNiIgZmlsbD0iIzNCODJGNiIgc3Ryb2tlPSIjM0I4MkY2IiBzdHJva2Utd2lkdGg9IjIiLz4KICAgIDxwYXRoIGQ9Ik01NiAyNDQgbDQgNSBsOCAtOSIgc3Ryb2tlPSIjRjhGQUZDIiBzdHJva2Utd2lkdGg9IjIuNCIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgICA8dGV4dCB4PSI4OCIgeT0iMjU4IiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC41Ij5UZXN0IG9uIG1vYmlsZSBkZXZpY2VzPC90ZXh0PgogICAgPGxpbmUgeDE9Ijg4IiB5MT0iMjQxIiB4Mj0iMjI0LjQiIHkyPSIyNDEiIHN0cm9rZT0iIzk0QTNCOCIgc3Ryb2tlLXdpZHRoPSIxLjQiLz48cmVjdCB4PSI0MCIgeT0iMjg2IiB3aWR0aD0iMjkwIiBoZWlnaHQ9IjQyIiByeD0iMTIiIGZpbGw9IiMxQTI0MzYiIHN0cm9rZT0iIzMzNDE1NSIvPgogICAgPHJlY3QgeD0iNjAiIHk9IjI5NyIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzM0MTU1IiBzdHJva2Utd2lkdGg9IjIiLz4KICAgIAogICAgPHRleHQgeD0iODgiIHk9IjMxMiIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuOTUiPkRlcGxveSB0byBwcm9kdWN0aW9uPC90ZXh0PgogICAgCiAgPHJlY3QgeD0iMzYwIiB5PSI3MCIgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyMjAiIHJ4PSIxOCIgZmlsbD0iIzFBMjQzNiIgc3Ryb2tlPSIjMzM0MTU1Ii8+CiAgPHRleHQgeD0iMzgyIiB5PSIxMDAiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSIjOTRBM0I4Ij5Qcm9ncmVzczwvdGV4dD4KICA8Y2lyY2xlIGN4PSI0NzAiIGN5PSIxOTAiIHI9IjYwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMTIiLz4KICA8Y2lyY2xlIGN4PSI0NzAiIGN5PSIxOTAiIHI9IjYwIiBmaWxsPSJub25lIiBzdHJva2U9IiM4QjVDRjYiIHN0cm9rZS13aWR0aD0iMTIiIHN0cm9rZS1kYXNoYXJyYXk9IjM3NyIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjE1MCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiB0cmFuc2Zvcm09InJvdGF0ZSgtOTAgNDcwIDE5MCkiLz4KICA8dGV4dCB4PSI0NzAiIHk9IjE5OCIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNGOEZBRkMiIHRleHQtYW5jaG9yPSJtaWRkbGUiPjYwJTwvdGV4dD4KCiAgPC9nPgo8L3N2Zz4=" alt="Preview of Taskly to-do app" loading="lazy">
+            <div class="project-overlay">
+              <a href="#" class="icon-btn" aria-label="View live demo"><svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <a href="#" class="icon-btn" aria-label="View source on GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-index">04</span>
+            <h3>Taskly — To-Do App</h3>
+            <p>A drag-and-drop task manager with local storage persistence.</p>
+            <div class="tag-row"><span class="tag">JS</span><span class="tag">CSS Grid</span></div>
+            <div class="project-links">
+              <a href="#" class="link-btn">Live Demo</a>
+              <a href="#" class="link-btn link-btn-ghost">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal-up" data-category="kit">
+          <div class="project-img">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMzQjgyRjYiIHN0b3Atb3BhY2l0eT0iMC4xNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwRjE3MkEiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0MCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwRjE3MkEiLz4KICA8cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNiZ2cpIi8+CiAgPCEtLSBicm93c2VyIGNocm9tZSAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM0IiBmaWxsPSIjMEIxMjIyIi8+CiAgPGNpcmNsZSBjeD0iMjAiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0VGNDQ0NCIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMzgiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0Y1OUUwQiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iNTYiIGN5PSIxNyIgcj0iNSIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iOTAiIHk9IjkiIHdpZHRoPSIyMjAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjMUUyOTNCIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzNCIgeDI9IjY0MCIgeTI9IjM0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMzQpIj4KICAgIAogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzY2IiBmaWxsPSIjMEYxNzJBIi8+CiAgPHRleHQgeD0iNDAiIHk9IjUwIiBmb250LWZhbWlseT0iUG9wcGlucywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzk0QTNCOCI+UG9ydGZvbGlvIEdyaWQg4oCUIFRoZW1lIFByZXZpZXc8L3RleHQ+CiAgPHJlY3QgeD0iNDAiIHk9IjcwIiB3aWR0aD0iODQiIGhlaWdodD0iNzQiIHJ4PSIxMCIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjE0MCIgeT0iNzAiIHdpZHRoPSI4NCIgaGVpZ2h0PSI3NCIgcng9IjEwIiBmaWxsPSIjOEI1Q0Y2IiBvcGFjaXR5PSIwLjU1Ii8+PHJlY3QgeD0iMjQwIiB5PSI3MCIgd2lkdGg9Ijg0IiBoZWlnaHQ9Ijc0IiByeD0iMTAiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuNTUiLz48cmVjdCB4PSIzNDAiIHk9IjcwIiB3aWR0aD0iODQiIGhlaWdodD0iNzQiIHJ4PSIxMCIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjQ0MCIgeT0iNzAiIHdpZHRoPSI4NCIgaGVpZ2h0PSI3NCIgcng9IjEwIiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjU1Ii8+PHJlY3QgeD0iNDAiIHk9IjE2MCIgd2lkdGg9Ijg0IiBoZWlnaHQ9Ijc0IiByeD0iMTAiIGZpbGw9IiM4QjVDRjYiIG9wYWNpdHk9IjAuNTUiLz48cmVjdCB4PSIxNDAiIHk9IjE2MCIgd2lkdGg9Ijg0IiBoZWlnaHQ9Ijc0IiByeD0iMTAiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuNTUiLz48cmVjdCB4PSIyNDAiIHk9IjE2MCIgd2lkdGg9Ijg0IiBoZWlnaHQ9Ijc0IiByeD0iMTAiIGZpbGw9IiM4QjVDRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSIzNDAiIHk9IjE2MCIgd2lkdGg9Ijg0IiBoZWlnaHQ9Ijc0IiByeD0iMTAiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuNTUiLz48cmVjdCB4PSI0NDAiIHk9IjE2MCIgd2lkdGg9Ijg0IiBoZWlnaHQ9Ijc0IiByeD0iMTAiIGZpbGw9IiM4QjVDRjYiIG9wYWNpdHk9IjAuNTUiLz48cmVjdCB4PSI0MCIgeT0iMjUwIiB3aWR0aD0iODQiIGhlaWdodD0iNzQiIHJ4PSIxMCIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC41NSIvPjxyZWN0IHg9IjE0MCIgeT0iMjUwIiB3aWR0aD0iODQiIGhlaWdodD0iNzQiIHJ4PSIxMCIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjI0MCIgeT0iMjUwIiB3aWR0aD0iODQiIGhlaWdodD0iNzQiIHJ4PSIxMCIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC41NSIvPjxyZWN0IHg9IjM0MCIgeT0iMjUwIiB3aWR0aD0iODQiIGhlaWdodD0iNzQiIHJ4PSIxMCIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC41NSIvPjxyZWN0IHg9IjQ0MCIgeT0iMjUwIiB3aWR0aD0iODQiIGhlaWdodD0iNzQiIHJ4PSIxMCIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC44NSIvPgogIDxyZWN0IHg9IjQwIiB5PSIzNDAiIHdpZHRoPSIxMjAiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjOTRBM0I4IiBvcGFjaXR5PSIwLjQiLz4KCiAgPC9nPgo8L3N2Zz4=" alt="Preview of Pixel portfolio template" loading="lazy">
+            <div class="project-overlay">
+              <a href="#" class="icon-btn" aria-label="View live demo"><svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <a href="#" class="icon-btn" aria-label="View source on GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-index">05</span>
+            <h3>Pixel — Portfolio Template</h3>
+            <p>An open-source, themeable portfolio template for fellow developers.</p>
+            <div class="tag-row"><span class="tag">HTML</span><span class="tag">SCSS</span></div>
+            <div class="project-links">
+              <a href="#" class="link-btn">Live Demo</a>
+              <a href="#" class="link-btn link-btn-ghost">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card reveal-up" data-category="app">
+          <div class="project-img">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iYmdnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM4QjVDRjYiIHN0b3Atb3BhY2l0eT0iMC4xNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwRjE3MkEiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0MCIgaGVpZ2h0PSI0MDAiIGZpbGw9IiMwRjE3MkEiLz4KICA8cmVjdCB3aWR0aD0iNjQwIiBoZWlnaHQ9IjQwMCIgZmlsbD0idXJsKCNiZ2cpIi8+CiAgPCEtLSBicm93c2VyIGNocm9tZSAtLT4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQwIiBoZWlnaHQ9IjM0IiBmaWxsPSIjMEIxMjIyIi8+CiAgPGNpcmNsZSBjeD0iMjAiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0VGNDQ0NCIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iMzgiIGN5PSIxNyIgcj0iNSIgZmlsbD0iI0Y1OUUwQiIgb3BhY2l0eT0iMC44Ii8+CiAgPGNpcmNsZSBjeD0iNTYiIGN5PSIxNyIgcj0iNSIgZmlsbD0iIzEwQjk4MSIgb3BhY2l0eT0iMC44Ii8+CiAgPHJlY3QgeD0iOTAiIHk9IjkiIHdpZHRoPSIyMjAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjMUUyOTNCIi8+CiAgPGxpbmUgeDE9IjAiIHkxPSIzNCIgeDI9IjY0MCIgeTI9IjM0IiBzdHJva2U9IiMzMzQxNTUiIHN0cm9rZS13aWR0aD0iMSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsMzQpIj4KICAgIAogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzY2IiBmaWxsPSIjMEYxNzJBIi8+CiAgPHJlY3QgeD0iNDAiIHk9IjYwIiB3aWR0aD0iMjIwIiBoZWlnaHQ9IjIyMCIgcng9IjIwIiBmaWxsPSJ1cmwoI2JnZykiIHN0cm9rZT0iIzMzNDE1NSIvPgogIDxjaXJjbGUgY3g9IjE1MCIgY3k9IjE3MCIgcj0iNjAiIGZpbGw9IiM4QjVDRjYiIG9wYWNpdHk9IjAuNSIvPgogIDxjaXJjbGUgY3g9IjE1MCIgY3k9IjE3MCIgcj0iMzAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuOCIvPgogIDx0ZXh0IHg9IjMzMCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJQb3BwaW5zLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjRjhGQUZDIj5NaWRuaWdodCBEcml2ZTwvdGV4dD4KICA8dGV4dCB4PSIzMzAiIHk9IjExMiIgZm9udC1mYW1pbHk9IlBvcHBpbnMsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM5NEEzQjgiPkxvb3AgUmFkaW8gwrcgU3ludGh3YXZlPC90ZXh0PgogIDxyZWN0IHg9IjMzMCIgeT0iMTQ1LjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjMwIiByeD0iMy41IiBmaWxsPSIjOEI1Q0Y2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMzQzIiB5PSIxMzIuNSIgd2lkdGg9IjciIGhlaWdodD0iNTUiIHJ4PSIzLjUiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSIzNTYiIHk9IjEyMC4wIiB3aWR0aD0iNyIgaGVpZ2h0PSI4MCIgcng9IjMuNSIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjM2OSIgeT0iMTM3LjUiIHdpZHRoPSI3IiBoZWlnaHQ9IjQ1IiByeD0iMy41IiBmaWxsPSIjOEI1Q0Y2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iMzgyIiB5PSIxMTIuNSIgd2lkdGg9IjciIGhlaWdodD0iOTUiIHJ4PSIzLjUiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSIzOTUiIHk9IjEzMC4wIiB3aWR0aD0iNyIgaGVpZ2h0PSI2MCIgcng9IjMuNSIgZmlsbD0iIzNCODJGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjQwOCIgeT0iMTA1LjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjExMCIgcng9IjMuNSIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjQyMSIgeT0iMTM1LjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjUwIiByeD0iMy41IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iNDM0IiB5PSIxMjIuNSIgd2lkdGg9IjciIGhlaWdodD0iNzUiIHJ4PSIzLjUiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSI0NDciIHk9IjE0MC4wIiB3aWR0aD0iNyIgaGVpZ2h0PSI0MCIgcng9IjMuNSIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjQ2MCIgeT0iMTE1LjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjkwIiByeD0iMy41IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iNDczIiB5PSIxMzIuNSIgd2lkdGg9IjciIGhlaWdodD0iNTUiIHJ4PSIzLjUiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSI0ODYiIHk9IjEyNy41IiB3aWR0aD0iNyIgaGVpZ2h0PSI2NSIgcng9IjMuNSIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjQ5OSIgeT0iMTQyLjUiIHdpZHRoPSI3IiBoZWlnaHQ9IjM1IiByeD0iMy41IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iNTEyIiB5PSIxMjAuMCIgd2lkdGg9IjciIGhlaWdodD0iODAiIHJ4PSIzLjUiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSI1MjUiIHk9IjEzNS4wIiB3aWR0aD0iNyIgaGVpZ2h0PSI1MCIgcng9IjMuNSIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjUzOCIgeT0iMTMwLjAiIHdpZHRoPSI3IiBoZWlnaHQ9IjYwIiByeD0iMy41IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+PHJlY3QgeD0iNTUxIiB5PSIxNDAuMCIgd2lkdGg9IjciIGhlaWdodD0iNDAiIHJ4PSIzLjUiIGZpbGw9IiMzQjgyRjYiIG9wYWNpdHk9IjAuODUiLz48cmVjdCB4PSI1NjQiIHk9IjEyNS4wIiB3aWR0aD0iNyIgaGVpZ2h0PSI3MCIgcng9IjMuNSIgZmlsbD0iIzhCNUNGNiIgb3BhY2l0eT0iMC44NSIvPjxyZWN0IHg9IjU3NyIgeT0iMTM3LjUiIHdpZHRoPSI3IiBoZWlnaHQ9IjQ1IiByeD0iMy41IiBmaWxsPSIjM0I4MkY2IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGNpcmNsZSBjeD0iNDcwIiBjeT0iMjUwIiByPSIyNiIgZmlsbD0iIzNCODJGNiIvPgogIDxwYXRoIGQ9Ik00NjIgMjM4IGwxOCAxMiBsLTE4IDEyIFoiIGZpbGw9IiNGOEZBRkMiLz4KICA8Y2lyY2xlIGN4PSI0MTAiIGN5PSIyNTAiIHI9IjE2IiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KICA8Y2lyY2xlIGN4PSI1MzAiIGN5PSIyNTAiIHI9IjE2IiBmaWxsPSIjMUEyNDM2IiBzdHJva2U9IiMzMzQxNTUiLz4KCiAgPC9nPgo8L3N2Zz4=" alt="Preview of Loop music player" loading="lazy">
+            <div class="project-overlay">
+              <a href="#" class="icon-btn" aria-label="View live demo"><svg viewBox="0 0 24 24" fill="none"><path d="M14 5h5v5M19 5l-8 8M9 5H6.5A1.5 1.5 0 0 0 5 6.5v11A1.5 1.5 0 0 0 6.5 19h11a1.5 1.5 0 0 0 1.5-1.5V15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+              <a href="#" class="icon-btn" aria-label="View source on GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-index">06</span>
+            <h3>Loop — Music Player</h3>
+            <p>A glassmorphism music player UI with custom playlist controls.</p>
+            <div class="tag-row"><span class="tag">JS</span><span class="tag">Web Audio API</span></div>
+            <div class="project-links">
+              <a href="#" class="link-btn">Live Demo</a>
+              <a href="#" class="link-btn link-btn-ghost">GitHub</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE TIMELINE -->
+  <section class="section" id="experience">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Journey</p>
+      <h2 class="section-title reveal-up">How I got here</h2>
+      <div class="timeline">
+        <div class="timeline-line"><div class="timeline-line-fill" id="timelineFill"></div></div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2021</span>
+            <h3>Started Learning Programming</h3>
+            <p>Picked up HTML and CSS out of curiosity, and built my first static webpage.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2022</span>
+            <h3>University</h3>
+            <p>Enrolled in a Computer Science program and went deeper into logic and structure.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2023</span>
+            <h3>First Portfolio</h3>
+            <p>Designed and shipped my first personal portfolio, learning JavaScript along the way.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal-up">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">2024 – Present</span>
+            <h3>Freelance Projects</h3>
+            <p>Started taking on freelance frontend work for small businesses and startups.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATISTICS -->
+  <section class="section stats-section section-alt" id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="25">0</span><span class="stat-suffix">+</span>
+          <p>Projects Completed</p>
+        </div>
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="12">0</span><span class="stat-suffix">+</span>
+          <p>Happy Clients</p>
+        </div>
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="3">0</span><span class="stat-suffix">+</span>
+          <p>Years Learning</p>
+        </div>
+        <div class="stat-item reveal-up">
+          <span class="stat-number" data-target="8">0</span><span class="stat-suffix">+</span>
+          <p>Certificates</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" id="testimonials">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Testimonials</p>
+      <h2 class="section-title reveal-up">Kind words from clients</h2>
+      <div class="testimonial-slider reveal-up">
+        <div class="testimonial-track" id="testimonialTrack">
+          <div class="testimonial-card">
+            <p>"Rafi turned our vague idea into a clean, working site faster than we expected. Great communication throughout."</p>
+            <div class="testimonial-author"><strong>Tanvir Islam</strong><span>Founder, Cafe Aroma</span></div>
+          </div>
+          <div class="testimonial-card">
+            <p>"Extremely detail-oriented. The animations and layout felt premium without being flashy."</p>
+            <div class="testimonial-author"><strong>Nusrat Jahan</strong><span>Product Manager, Ledger</span></div>
+          </div>
+          <div class="testimonial-card">
+            <p>"Delivered exactly what we asked for, on time, and suggested improvements we hadn't thought of."</p>
+            <div class="testimonial-author"><strong>Imran Kabir</strong><span>Co-founder, Taskly</span></div>
+          </div>
+        </div>
+        <div class="testimonial-dots" id="testimonialDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section section-alt" id="gallery">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Gallery</p>
+      <h2 class="section-title reveal-up">Snapshots &amp; explorations</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item reveal-up"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ2cxIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMzQjgyRjYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMEYxNzJBIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzBGMTcyQSIvPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2dnMSkiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTEwIiBmaWxsPSIjRjhGQUZDIiBvcGFjaXR5PSIwLjA4Ii8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC4xNSIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMxMCIgcj0iNjAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+Cg==" alt="UI exploration 1" loading="lazy"></div>
+        <div class="gallery-item reveal-up"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ2cyIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM4QjVDRjYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMEYxNzJBIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzBGMTcyQSIvPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2dnMikiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTEwIiBmaWxsPSIjRjhGQUZDIiBvcGFjaXR5PSIwLjA4Ii8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC4xNSIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMxMCIgcj0iNjAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+Cg==" alt="UI exploration 2" loading="lazy"></div>
+        <div class="gallery-item reveal-up"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ2czIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNGNTlFMEIiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMEYxNzJBIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzBGMTcyQSIvPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2dnMykiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTEwIiBmaWxsPSIjRjhGQUZDIiBvcGFjaXR5PSIwLjA4Ii8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC4xNSIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMxMCIgcj0iNjAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+Cg==" alt="UI exploration 3" loading="lazy"></div>
+        <div class="gallery-item reveal-up"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ2c0IiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMxMEI5ODEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMEYxNzJBIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzBGMTcyQSIvPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2dnNCkiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTEwIiBmaWxsPSIjRjhGQUZDIiBvcGFjaXR5PSIwLjA4Ii8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC4xNSIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMxMCIgcj0iNjAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+Cg==" alt="UI exploration 4" loading="lazy"></div>
+        <div class="gallery-item reveal-up"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ2c1IiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNFQzQ4OTkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMEYxNzJBIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzBGMTcyQSIvPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2dnNSkiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTEwIiBmaWxsPSIjRjhGQUZDIiBvcGFjaXR5PSIwLjA4Ii8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC4xNSIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMxMCIgcj0iNjAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+Cg==" alt="UI exploration 5" loading="lazy"></div>
+        <div class="gallery-item reveal-up"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgNDAwIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ2c2IiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMzQjgyRjYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOEI1Q0Y2Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iIzBGMTcyQSIvPgogIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiBmaWxsPSJ1cmwoI2dnNikiIG9wYWNpdHk9IjAuNCIvPgogIDxjaXJjbGUgY3g9IjIwMCIgY3k9IjIwMCIgcj0iMTEwIiBmaWxsPSIjRjhGQUZDIiBvcGFjaXR5PSIwLjA4Ii8+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI0MCIgZmlsbD0iI0Y4RkFGQyIgb3BhY2l0eT0iMC4xNSIvPgogIDxjaXJjbGUgY3g9IjMwMCIgY3k9IjMxMCIgcj0iNjAiIGZpbGw9IiNGOEZBRkMiIG9wYWNpdHk9IjAuMTIiLz4KPC9zdmc+Cg==" alt="UI exploration 6" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <img src="" alt="" id="lightboxImg">
+  </div>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <div class="container">
+      <p class="section-eyebrow reveal-up">Contact</p>
+      <h2 class="section-title reveal-up">Let's build something together</h2>
+      <div class="contact-grid">
+        <form class="contact-form glass-card reveal-up" id="contactForm">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What's this about?" required>
+          </div>
+          <div class="form-field">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary ripple" id="submitBtn">Send Message</button>
+          <p class="form-status" id="formStatus" aria-live="polite"></p>
+        </form>
+        <div class="contact-info reveal-up">
+          <div class="glass-card contact-info-card">
+            <h3>Get in touch</h3>
+            <ul class="contact-list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="1.5"/><path d="m3 7 9 6 9-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>hello@rafiahmed.dev</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.25a2 2 0 0 1 2.11-.45c.9.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span>+880 1XXX-XXXXXX</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span>Dhaka, Bangladesh</span>
+              </li>
+            </ul>
+            <div class="social-icons">
+              <a href="#" aria-label="GitHub" class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></a>
+              <a href="#" aria-label="LinkedIn" class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.76-2.05C21.9 8.65 23 11.1 23 14.5V21h-4v-5.9c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1V21h-4V9Z"/></svg></a>
+              <a href="#" aria-label="Twitter / X" class="social-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H21.6l-5.9 6.75L22.7 21h-5.4l-4.2-5.5L8.3 21H5.6l6.3-7.2L4.5 3h5.5l3.8 5.03L18.9 3Zm-.9 16.2h1.5L7.1 4.7H5.5l12.5 14.5Z"/></svg></a>
+              <a href="#" aria-label="Instagram" class="social-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <a href="#hero" class="logo">RA<span>.</span></a>
+    <nav class="footer-links">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <p class="footer-copy">&copy; <span id="year"></span> Rafi Ahmed. All rights reserved.</p>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<script>
+// ===========================
+// 1. Loading Screen
+// ===========================
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  setTimeout(() => loader.classList.add('hidden'), 900);
+});
+
+// ===========================
+// 2. Cursor Glow (smooth trailing follow)
+// ===========================
+const cursorGlow = document.getElementById('cursorGlow');
+const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (cursorGlow && supportsHover && !prefersReducedMotion) {
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
+  let currentX = targetX;
+  let currentY = targetY;
+  let hasMoved = false;
+  let rafId = null;
+
+  const render = () => {
+    // Ease toward the target position for a smooth trailing effect
+    currentX += (targetX - currentX) * 0.15;
+    currentY += (targetY - currentY) * 0.15;
+    cursorGlow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+    rafId = requestAnimationFrame(render);
+  };
+
+  window.addEventListener('mousemove', (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if (!hasMoved) {
+      // Snap instantly on first move so it doesn't glide in from the center
+      currentX = targetX;
+      currentY = targetY;
+      hasMoved = true;
+    }
+    cursorGlow.classList.add('active');
+    if (!rafId) render();
+  });
+
+  // Hide only when the pointer actually leaves the browser viewport/window
+  document.documentElement.addEventListener('mouseleave', () => cursorGlow.classList.remove('active'));
+  window.addEventListener('blur', () => cursorGlow.classList.remove('active'));
+  document.addEventListener('mouseenter', () => { if (hasMoved) cursorGlow.classList.add('active'); });
+}
+
+// ===========================
+// 3. Scroll Progress Bar + Sticky Navbar + Active Link + Timeline Fill + Parallax
+// ===========================
+const scrollProgress = document.getElementById('scrollProgress');
+const navbar = document.getElementById('navbar');
+const backToTop = document.getElementById('backToTop');
+const heroBg = document.getElementById('heroBg');
+const timelineFill = document.getElementById('timelineFill');
+const timelineEl = document.querySelector('.timeline');
+const navLinkEls = document.querySelectorAll('.nav-link');
+const sectionsForNav = document.querySelectorAll('main > section[id]');
+
+function onScroll() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  scrollProgress.style.width = progress + '%';
+
+  navbar.classList.toggle('scrolled', scrollTop > 40);
+  backToTop.classList.toggle('visible', scrollTop > 500);
+
+  if (heroBg) {
+    heroBg.style.transform = `translateY(${scrollTop * 0.25}px)`;
+  }
+
+  // Timeline fill based on visibility
+  if (timelineEl) {
+    const rect = timelineEl.getBoundingClientRect();
+    const viewportH = window.innerHeight;
+    const visible = Math.min(Math.max(viewportH - rect.top, 0), rect.height);
+    const pct = Math.min((visible / rect.height) * 100, 100);
+    timelineFill.style.height = pct + '%';
+  }
+
+  // Active nav link
+  let currentId = '';
+  sectionsForNav.forEach((sec) => {
+    const top = sec.offsetTop - 140;
+    if (scrollTop >= top) currentId = sec.id;
+  });
+  navLinkEls.forEach((link) => {
+    link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+  });
+}
+document.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ===========================
+// 4. Mobile Menu
+// ===========================
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+menuToggle.addEventListener('click', () => {
+  const isOpen = navLinks.classList.toggle('open');
+  menuToggle.classList.toggle('open', isOpen);
+  menuToggle.setAttribute('aria-expanded', isOpen);
+});
+navLinks.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  menuToggle.classList.remove('open');
+  menuToggle.setAttribute('aria-expanded', 'false');
+}));
+
+// ===========================
+// 5. Typing Text Effect
+// ===========================
+const typingText = document.getElementById('typingText');
+const words = ['interfaces.', 'experiences.', 'products.', 'ideas into code.'];
+let wIndex = 0, cIndex = 0, deleting = false;
+
+function typeLoop() {
+  const word = words[wIndex];
+  if (!deleting) {
+    cIndex++;
+    typingText.textContent = word.slice(0, cIndex);
+    if (cIndex === word.length) { deleting = true; setTimeout(typeLoop, 1400); return; }
+  } else {
+    cIndex--;
+    typingText.textContent = word.slice(0, cIndex);
+    if (cIndex === 0) { deleting = false; wIndex = (wIndex + 1) % words.length; }
+  }
+  setTimeout(typeLoop, deleting ? 45 : 90);
+}
+typeLoop();
+
+// ===========================
+// 6. Scroll Reveal (IntersectionObserver)
+// ===========================
+const revealEls = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+revealEls.forEach((el) => revealObserver.observe(el));
+
+// ===========================
+// 7. Skill Rings
+// ===========================
+const skillItems = document.querySelectorAll('.skill-item');
+const skillObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    const item = entry.target;
+    const level = parseInt(item.dataset.level, 10);
+    const ring = item.querySelector('.ring-fill');
+    const pctLabel = item.querySelector('.skill-pct');
+    const circumference = 264;
+    const offset = circumference - (level / 100) * circumference;
+    requestAnimationFrame(() => { ring.style.strokeDashoffset = offset; });
+
+    let current = 0;
+    const step = Math.max(1, Math.round(level / 40));
+    const interval = setInterval(() => {
+      current += step;
+      if (current >= level) { current = level; clearInterval(interval); }
+      pctLabel.textContent = current + '%';
+    }, 25);
+
+    skillObserver.unobserve(item);
+  });
+}, { threshold: 0.4 });
+skillItems.forEach((item) => skillObserver.observe(item));
+
+// ===========================
+// 8. Animated Counters (Statistics)
+// ===========================
+const statNumbers = document.querySelectorAll('.stat-number');
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.target, 10);
+    let current = 0;
+    const step = Math.max(1, Math.round(target / 50));
+    const interval = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(interval); }
+      el.textContent = current;
+    }, 30);
+    statObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+statNumbers.forEach((el) => statObserver.observe(el));
+
+// ===========================
+// 9. Testimonial Slider
+// ===========================
+const track = document.getElementById('testimonialTrack');
+const dotsWrap = document.getElementById('testimonialDots');
+const slides = track ? track.children.length : 0;
+let currentSlide = 0;
+
+if (track) {
+  for (let i = 0; i < slides; i++) {
+    const dot = document.createElement('button');
+    if (i === 0) dot.classList.add('active');
+    dot.setAttribute('aria-label', `Go to testimonial ${i + 1}`);
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsWrap.appendChild(dot);
+  }
+
+  function goToSlide(i) {
+    currentSlide = i;
+    track.style.transform = `translateX(-${i * 100}%)`;
+    [...dotsWrap.children].forEach((d, idx) => d.classList.toggle('active', idx === i));
+  }
+
+  let autoSlide = setInterval(() => {
+    goToSlide((currentSlide + 1) % slides);
+  }, 5000);
+
+  track.parentElement.addEventListener('mouseenter', () => clearInterval(autoSlide));
+  track.parentElement.addEventListener('mouseleave', () => {
+    autoSlide = setInterval(() => goToSlide((currentSlide + 1) % slides), 5000);
+  });
+}
+
+// ===========================
+// 10. Gallery Lightbox
+// ===========================
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightboxImg');
+const lightboxClose = document.getElementById('lightboxClose');
+
+document.querySelectorAll('.gallery-item img').forEach((img) => {
+  img.addEventListener('click', () => {
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt;
+    lightbox.classList.add('open');
+  });
+});
+function closeLightbox() { lightbox.classList.remove('open'); }
+lightboxClose.addEventListener('click', closeLightbox);
+lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+// ===========================
+// 11. Ripple Button Effect
+// ===========================
+document.querySelectorAll('.ripple').forEach((btn) => {
+  btn.addEventListener('click', function (e) {
+    const rect = this.getBoundingClientRect();
+    const circle = document.createElement('span');
+    const size = Math.max(rect.width, rect.height);
+    circle.className = 'ripple-circle';
+    circle.style.width = circle.style.height = size + 'px';
+    circle.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    circle.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    this.appendChild(circle);
+    setTimeout(() => circle.remove(), 650);
+  });
+});
+
+// ===========================
+// 12. Contact Form (front-end only demo)
+// ===========================
+const contactForm = document.getElementById('contactForm');
+const formStatus = document.getElementById('formStatus');
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.textContent = 'Sending...';
+    setTimeout(() => {
+      formStatus.textContent = "Thanks! Your message has been noted. I'll get back to you soon.";
+      submitBtn.textContent = 'Send Message';
+      contactForm.reset();
+    }, 900);
+  });
+}
+
+// ===========================
+// 13b. Project Filters
+// ===========================
+const filterBtns = document.querySelectorAll('.filter-btn');
+const projectCards = document.querySelectorAll('.project-card');
+filterBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    projectCards.forEach((card) => {
+      const match = filter === 'all' || card.dataset.category === filter;
+      card.classList.toggle('is-hidden', !match);
+    });
+  });
+});
+
+// ===========================
+// 14. Footer year
+// ===========================
+document.getElementById('year').textContent = new Date().getFullYear();
+
+</script>
+</body>
+</html>
