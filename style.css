@@ -11,21 +11,21 @@
   --text: #F8FAFC;
   --muted: #94A3B8;
   --border: rgba(255, 255, 255, .12);
-
+ 
   --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
   --font-display: 'Poppins', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-
+ 
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 24px;
   --ease: cubic-bezier(.22, 1, .36, 1);
 }
-
+ 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
+ 
 html { scroll-behavior: smooth; }
-
+ 
 body {
   background: var(--bg);
   color: var(--text);
@@ -34,33 +34,33 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-
+ 
 img { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 input, textarea { font-family: inherit; }
-
+ 
 .container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
 }
-
+ 
 ::selection { background: var(--primary); color: #fff; }
-
+ 
 :focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 3px;
   border-radius: 4px;
 }
-
+ 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
+ 
 /* ===========================
    2. Loader
 =========================== */
@@ -84,7 +84,7 @@ input, textarea { font-family: inherit; }
 .loader-bar { width: 160px; height: 3px; background: var(--border); border-radius: 10px; overflow: hidden; }
 .loader-bar-fill { width: 0%; height: 100%; background: var(--gradient); animation: loaderFill 1.4s var(--ease) forwards; }
 @keyframes loaderFill { to { width: 100%; } }
-
+ 
 /* ===========================
    3. Cursor glow & scroll progress
 =========================== */
@@ -100,13 +100,13 @@ input, textarea { font-family: inherit; }
 }
 @media (hover: hover) { .cursor-glow.active { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .cursor-glow { display: none; } }
-
+ 
 .scroll-progress {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
   background: var(--gradient); z-index: 1001;
   transition: width .1s linear;
 }
-
+ 
 /* ===========================
    4. Navbar
 =========================== */
@@ -138,13 +138,13 @@ input, textarea { font-family: inherit; }
 .nav-link:hover, .nav-link.active { color: var(--text); }
 .nav-link:hover::after, .nav-link.active::after { width: 100%; }
 .nav-cta { white-space: nowrap; }
-
+ 
 .menu-toggle { display: none; flex-direction: column; gap: 5px; width: 26px; }
 .menu-toggle span { display: block; height: 2px; width: 100%; background: var(--text); border-radius: 2px; transition: transform .3s var(--ease), opacity .3s var(--ease); }
 .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .menu-toggle.open span:nth-child(2) { opacity: 0; }
 .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
+ 
 /* ===========================
    5. Buttons
 =========================== */
@@ -162,14 +162,14 @@ input, textarea { font-family: inherit; }
 .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -8px rgba(139, 92, 246, .55); }
 .btn-outline { border: 1px solid var(--border); color: var(--text); background: rgba(255,255,255,.03); }
 .btn-outline:hover { transform: translateY(-3px); border-color: var(--primary); background: rgba(59,130,246,.08); }
-
+ 
 .ripple { position: relative; }
 .ripple-circle {
   position: absolute; border-radius: 50%; background: rgba(255,255,255,.45);
   transform: scale(0); animation: rippleAnim .6s ease-out forwards; pointer-events: none;
 }
 @keyframes rippleAnim { to { transform: scale(3); opacity: 0; } }
-
+ 
 /* ===========================
    6. Glass card
 =========================== */
@@ -181,12 +181,12 @@ input, textarea { font-family: inherit; }
   -webkit-backdrop-filter: blur(18px);
   transition: background .3s var(--ease), transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
 }
-
+ 
 .text-gradient {
   background: var(--gradient);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-
+ 
 /* ===========================
    7. Hero
 =========================== */
@@ -215,7 +215,7 @@ input, textarea { font-family: inherit; }
   mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black, transparent);
   opacity: .5;
 }
-
+ 
 .hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
 .eyebrow { font-family: var(--font-mono); font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); margin-bottom: 18px; }
 .hero-title { font-size: clamp(2.2rem, 4.6vw, 3.6rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.12; margin-bottom: 22px; }
@@ -229,7 +229,7 @@ input, textarea { font-family: inherit; }
 .hero-meta-item { display: flex; flex-direction: column; }
 .hero-meta-item strong { font-size: 1.5rem; font-weight: 700; }
 .hero-meta-item span { font-size: .82rem; color: var(--muted); }
-
+ 
 .hero-visual { display: flex; justify-content: center; }
 .hero-photo-frame { position: relative; width: 320px; height: 320px; }
 .hero-photo {
@@ -254,7 +254,7 @@ input, textarea { font-family: inherit; }
 .chip-1 { top: 10%; right: -14%; animation-delay: -1s; }
 .chip-2 { bottom: 8%; left: -12%; animation-delay: -3s; }
 @keyframes chipFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
+ 
 .scroll-cue { position: absolute; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 1; }
 .scroll-cue span {
   display: block; width: 22px; height: 36px; border: 2px solid var(--border); border-radius: 14px; position: relative;
@@ -264,7 +264,7 @@ input, textarea { font-family: inherit; }
   border-radius: 4px; transform: translateX(-50%); animation: scrollCue 1.8s ease infinite;
 }
 @keyframes scrollCue { 0% { opacity: 1; top: 6px; } 100% { opacity: 0; top: 18px; } }
-
+ 
 /* ===========================
    8. Sections generic
 =========================== */
@@ -272,14 +272,14 @@ input, textarea { font-family: inherit; }
 .section-alt { background: var(--bg-alt); }
 .section-eyebrow { font-family: var(--font-mono); color: var(--primary); text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; margin-bottom: 12px; }
 .section-title { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 700; letter-spacing: -.02em; margin-bottom: 56px; max-width: 640px; }
-
+ 
 /* Reveal animations */
 .reveal-up, .reveal-left, .reveal-right { opacity: 0; transition: opacity .8s var(--ease), transform .8s var(--ease); }
 .reveal-up { transform: translateY(40px); }
 .reveal-left { transform: translateX(-40px); }
 .reveal-right { transform: translateX(40px); }
 .reveal-up.in-view, .reveal-left.in-view, .reveal-right.in-view { opacity: 1; transform: translate(0, 0); }
-
+ 
 /* ===========================
    9. About
 =========================== */
@@ -296,7 +296,7 @@ input, textarea { font-family: inherit; }
   background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.25);
 }
 .glass-card:hover { transform: translateY(-4px); background: var(--card-bg-hover); box-shadow: 0 16px 40px -20px rgba(0,0,0,.5); }
-
+ 
 /* ===========================
    10. Skills
 =========================== */
@@ -315,7 +315,7 @@ input, textarea { font-family: inherit; }
   font-weight: 600; font-size: .95rem;
 }
 .skill-name { color: var(--muted); font-size: .88rem; }
-
+ 
 /* ===========================
    11. Services
 =========================== */
@@ -331,7 +331,7 @@ input, textarea { font-family: inherit; }
 .service-card:hover .service-icon { transform: rotate(-8deg) scale(1.08); background: var(--gradient); color: #fff; }
 .service-card h3 { font-size: 1.15rem; margin-bottom: 10px; }
 .service-card p { color: var(--muted); font-size: .92rem; }
-
+ 
 /* ===========================
    12. Projects
 =========================== */
@@ -343,7 +343,7 @@ input, textarea { font-family: inherit; }
 }
 .filter-btn:hover { color: var(--text); border-color: rgba(59,130,246,.4); transform: translateY(-2px); }
 .filter-btn.active { color: #fff; background: var(--gradient); border-color: transparent; box-shadow: 0 8px 20px -8px rgba(59,130,246,.55); }
-
+ 
 .projects-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
   grid-auto-flow: dense;
@@ -358,12 +358,12 @@ input, textarea { font-family: inherit; }
 .project-card-featured .project-img { aspect-ratio: 16/11; }
 .project-card-featured h3 { font-size: 1.35rem; }
 .project-card-featured p { font-size: .98rem; }
-
+ 
 .project-card:hover { transform: translateY(-8px) scale(1.015); box-shadow: 0 30px 50px -20px rgba(59,130,246,.35); border-color: rgba(59,130,246,.4); }
 .project-img { position: relative; aspect-ratio: 16/10; overflow: hidden; }
 .project-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease), filter .5s var(--ease); }
 .project-card:hover .project-img img { transform: scale(1.08); filter: saturate(1.15); }
-
+ 
 .project-overlay {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 14px;
   background: linear-gradient(180deg, rgba(15,23,42,.15), rgba(15,23,42,.75));
@@ -381,7 +381,7 @@ input, textarea { font-family: inherit; }
 .project-card:hover .icon-btn:nth-child(2) { transition-delay: .06s; }
 .icon-btn:hover { background: var(--gradient); border-color: transparent; }
 .icon-btn svg { width: 20px; height: 20px; }
-
+ 
 .project-body { padding: 24px; display: flex; flex-direction: column; flex: 1; position: relative; }
 .project-index {
   font-family: var(--font-mono); font-size: .78rem; color: var(--primary); opacity: .8; margin-bottom: 6px;
@@ -397,7 +397,7 @@ input, textarea { font-family: inherit; }
 }
 .link-btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
 .link-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -8px rgba(59,130,246,.5); }
-
+ 
 /* ===========================
    13. Timeline
 =========================== */
@@ -415,7 +415,7 @@ input, textarea { font-family: inherit; }
 .timeline-date { font-family: var(--font-mono); font-size: .78rem; color: var(--primary); }
 .timeline-content h3 { margin: 8px 0 8px; font-size: 1.05rem; }
 .timeline-content p { color: var(--muted); font-size: .92rem; }
-
+ 
 /* ===========================
    14. Stats
 =========================== */
@@ -424,7 +424,7 @@ input, textarea { font-family: inherit; }
 .stat-number { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .stat-suffix { font-size: 1.6rem; font-weight: 800; color: var(--secondary); }
 .stat-item p { color: var(--muted); margin-top: 8px; font-size: .9rem; }
-
+ 
 /* ===========================
    15. Testimonials
 =========================== */
@@ -442,7 +442,7 @@ input, textarea { font-family: inherit; }
   width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .3s ease, transform .3s ease;
 }
 .testimonial-dots button.active { background: var(--primary); transform: scale(1.3); }
-
+ 
 /* ===========================
    16. Gallery
 =========================== */
@@ -456,7 +456,7 @@ input, textarea { font-family: inherit; }
 }
 .gallery-item:hover img { transform: scale(1.12); filter: blur(1px); }
 .gallery-item:hover::after { opacity: 1; }
-
+ 
 /* ===========================
    17. Articles
 =========================== */
@@ -469,16 +469,95 @@ input, textarea { font-family: inherit; }
 .article-date { font-size: .85rem; color: var(--muted); }
 .article-link { font-size: .95rem; color: var(--primary); font-weight: 500; transition: color .3s ease; }
 .article-link:hover { color: var(--secondary); }
-
+ 
+/* ===========================
+   Responsive: large tablet / small laptop ( <= 1024px )
+=========================== */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; text-align: center; gap: 56px; }
+  .hero-desc { margin-left: auto; margin-right: auto; }
+  .hero-cta, .hero-meta { justify-content: center; }
+  .hero-visual { order: -1; }
+ 
+  .about-grid { grid-template-columns: 1fr 1fr; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); row-gap: 32px; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .projects-grid { grid-template-columns: 1fr 1fr; }
+  .project-card-featured { grid-column: span 2; grid-row: span 1; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); row-gap: 32px; }
+  .articles-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+ 
+/* ===========================
+   Mobile nav ( <= 900px )
+=========================== */
+@media (max-width: 900px) {
+  .nav-links {
+    position: fixed; top: 0; right: -100%; height: 100vh; width: min(320px, 80vw);
+    background: rgba(15, 23, 42, .97); backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    flex-direction: column; justify-content: center; align-items: center; gap: 30px;
+    transition: right .4s var(--ease);
+    border-left: 1px solid var(--border);
+    z-index: 1050;
+  }
+  .nav-links.open { right: 0; }
+  .nav-cta { display: none; }
+  .menu-toggle { display: flex; z-index: 1100; }
+}
+ 
+/* ===========================
+   Small tablet / large phone ( <= 768px )
+=========================== */
 @media (max-width: 768px) {
+  .section { padding: 80px 0; }
+  .section-title { margin-bottom: 40px; }
+ 
+  .about-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: repeat(3, 1fr); }
+  .services-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-card-featured { grid-column: span 1; }
   .articles-grid { grid-template-columns: 1fr; }
   .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+ 
+  .hero-photo-frame { width: 260px; height: 260px; }
+  .floating-chip { font-size: .7rem; padding: 6px 12px; }
+  .chip-1 { right: -6%; }
+  .chip-2 { left: -6%; }
 }
-
+ 
+/* ===========================
+   Mobile ( <= 480px )
+=========================== */
 @media (max-width: 480px) {
-  .gallery-grid { grid-template-columns: 1fr; }
+  .container { padding: 0 18px; }
+  .hero { padding-top: 120px; }
+  .hero-title { font-size: 2rem; }
+  .hero-meta { gap: 22px; flex-wrap: wrap; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; }
+  .testimonial-card { padding: 28px 22px; }
+  .back-to-top { bottom: 18px; right: 18px; width: 42px; height: 42px; }
+  .footer-inner { flex-direction: column; text-align: center; }
 }
-
+ 
+/* ===========================
+   Reduced motion
+=========================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+ 
 .lightbox {
   position: fixed; inset: 0; background: rgba(2,6,20,.92); z-index: 2000;
   display: flex; align-items: center; justify-content: center;
@@ -492,7 +571,7 @@ input, textarea { font-family: inherit; }
   transition: background .3s ease, transform .3s ease;
 }
 .lightbox-close:hover { background: rgba(255,255,255,.2); transform: rotate(90deg); }
-
+ 
 /* ===========================
    17. Contact
 =========================== */
@@ -512,7 +591,7 @@ input, textarea { font-family: inherit; }
 }
 .form-field input::placeholder, .form-field textarea::placeholder { color: #64748B; }
 .form-status { font-size: .85rem; color: var(--secondary); min-height: 1.2em; }
-
+ 
 .contact-info-card { padding: 32px; }
 .contact-info-card h3 { margin-bottom: 20px; font-size: 1.1rem; }
 .contact-list { display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
@@ -526,7 +605,7 @@ input, textarea { font-family: inherit; }
 }
 .social-icon svg { width: 18px; height: 18px; }
 .social-icon:hover { transform: translateY(-4px); background: var(--gradient); }
-
+ 
 /* ===========================
    18. Footer
 =========================== */
@@ -536,7 +615,7 @@ input, textarea { font-family: inherit; }
 .footer-links a { color: var(--muted); font-size: .9rem; transition: color .25s ease; }
 .footer-links a:hover { color: var(--text); }
 .footer-copy { color: var(--muted); font-size: .84rem; }
-
+ 
 .back-to-top {
   position: fixed; bottom: 28px; right: 28px; width: 46px; height: 46px; border-radius: 50%;
   background: var(--gradient); display: flex; align-items: center; justify-content: center; z-index: 900;
