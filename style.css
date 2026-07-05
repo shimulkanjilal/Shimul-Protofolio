@@ -24,7 +24,12 @@
  
 * { margin: 0; padding: 0; box-sizing: border-box; }
  
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
  
 body {
   background: var(--bg);
@@ -32,6 +37,8 @@ body {
   font-family: var(--font-display);
   line-height: 1.6;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
   -webkit-font-smoothing: antialiased;
 }
  
@@ -283,7 +290,7 @@ input, textarea { font-family: inherit; }
 /* ===========================
    9. About
 =========================== */
-.about-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .about-grid .glass-card { padding: 32px; }
 .about-grid h3 { font-size: 1.1rem; margin-bottom: 14px; }
 .about-grid p, .about-list span { color: var(--muted); font-size: .95rem; }
@@ -300,7 +307,7 @@ input, textarea { font-family: inherit; }
 /* ===========================
    10. Skills
 =========================== */
-.skills-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; }
+.skills-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
 .skill-item { text-align: center; }
 .skill-ring { position: relative; width: 100px; height: 100px; margin: 0 auto 14px; }
 .skill-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -319,7 +326,7 @@ input, textarea { font-family: inherit; }
 /* ===========================
    11. Services
 =========================== */
-.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.services-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .service-card { padding: 36px 30px; }
 .service-icon {
   width: 54px; height: 54px; border-radius: 14px; margin-bottom: 22px;
@@ -345,7 +352,7 @@ input, textarea { font-family: inherit; }
 .filter-btn.active { color: #fff; background: var(--gradient); border-color: transparent; box-shadow: 0 8px 20px -8px rgba(59,130,246,.55); }
  
 .projects-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;
   grid-auto-flow: dense;
 }
 .project-card {
@@ -419,7 +426,7 @@ input, textarea { font-family: inherit; }
 /* ===========================
    14. Stats
 =========================== */
-.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; text-align: center; }
 .stat-item { padding: 20px; }
 .stat-number { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .stat-suffix { font-size: 1.6rem; font-weight: 800; color: var(--secondary); }
@@ -446,7 +453,7 @@ input, textarea { font-family: inherit; }
 /* ===========================
    16. Gallery
 =========================== */
-.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.gallery-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .gallery-item { position: relative; border-radius: var(--radius-md); overflow: hidden; aspect-ratio: 1/1; cursor: pointer; }
 .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease), filter .5s var(--ease); }
 .gallery-item::after {
@@ -460,7 +467,7 @@ input, textarea { font-family: inherit; }
 /* ===========================
    17. Articles
 =========================== */
-.articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.articles-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
 .article-card { padding: 28px; border-radius: var(--radius-md); transition: all .35s var(--ease); }
 .article-card:hover { transform: translateY(-4px); background: var(--card-bg-hover); }
 .article-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 12px; color: var(--text); }
@@ -480,13 +487,13 @@ input, textarea { font-family: inherit; }
   .hero-visual { order: -1; }
  
   .about-grid { grid-template-columns: 1fr 1fr; }
-  .skills-grid { grid-template-columns: repeat(3, 1fr); row-gap: 32px; }
+  .skills-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 32px; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .projects-grid { grid-template-columns: 1fr 1fr; }
   .project-card-featured { grid-column: span 2; grid-row: span 1; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); row-gap: 32px; }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; }
   .articles-grid { grid-template-columns: 1fr 1fr; }
-  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .contact-grid { grid-template-columns: 1fr; }
 }
  
@@ -516,12 +523,12 @@ input, textarea { font-family: inherit; }
   .section-title { margin-bottom: 40px; }
  
   .about-grid { grid-template-columns: 1fr; }
-  .skills-grid { grid-template-columns: repeat(3, 1fr); }
+  .skills-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .services-grid { grid-template-columns: 1fr; }
   .projects-grid { grid-template-columns: 1fr; }
   .project-card-featured { grid-column: span 1; }
   .articles-grid { grid-template-columns: 1fr; }
-  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .form-row { grid-template-columns: 1fr; }
  
   .hero-photo-frame { width: 260px; height: 260px; }
@@ -538,7 +545,7 @@ input, textarea { font-family: inherit; }
   .hero { padding-top: 120px; }
   .hero-title { font-size: 2rem; }
   .hero-meta { gap: 22px; flex-wrap: wrap; }
-  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+  .skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .gallery-grid { grid-template-columns: 1fr 1fr; }
   .testimonial-card { padding: 28px 22px; }
@@ -626,3 +633,4 @@ input, textarea { font-family: inherit; }
 .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
 .back-to-top svg { width: 20px; height: 20px; color: #fff; }
 .back-to-top:hover { transform: translateY(-4px); }
+ 
